@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!doctype html>
 <html lang="en-US" xmlns:th="http://www.thymeleaf.org">
   <head>
@@ -69,3 +70,52 @@
     <script src="/navbar.js"></script>
   </body>
 </html>
+=======
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${titulo}">Lista de Cuestionarios</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container mt-4">
+            <h2 th:text="${titulo}">Lista de Cuestionarios</h2>
+            
+            <div th:if="${cuestionarios.empty}">
+                <div class="alert alert-info">No hay cuestionarios disponibles</div>
+            </div>
+            
+            <table class="table" th:unless="${cuestionarios.empty}">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Título</th>
+                        <th>Descripción</th>
+                        <th>Fecha</th>
+                        <th>Duración</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="cuestionario : ${cuestionarios}">
+                        <td th:text="${cuestionario.titulo}"></td>
+                        <td th:text="${cuestionario.descripcion}"></td>
+                        <td th:text="${#temporals.format(cuestionario.fecha, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${cuestionario.duracion} + ' min'"></td>
+                        <td>
+                            <a th:href="@{/cuestionarios/editar/{id}(id=${cuestionario.id})}" 
+                               class="btn btn-sm btn-primary">Editar</a>
+                            <a th:href="@{/cuestionarios/eliminar/{id}(id=${cuestionario.id})}" 
+                               class="btn btn-sm btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <a th:href="@{/cuestionarios/nuevo}" class="btn btn-success mt-3">Nuevo Cuestionario</a>
+        </div>
+    </div>
+</body>
+</html>
+>>>>>>> origin/master

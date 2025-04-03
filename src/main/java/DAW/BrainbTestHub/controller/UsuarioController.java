@@ -3,6 +3,10 @@ package DAW.BrainbTestHub.controller;
 import DAW.BrainbTestHub.model.Usuario;
 import DAW.BrainbTestHub.service.UsuarioService;
 import jakarta.validation.Valid;
+<<<<<<< HEAD
+=======
+import lombok.Value;
+>>>>>>> origin/master
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
