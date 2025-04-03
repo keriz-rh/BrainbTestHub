@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title th:text="${titulo}">Formulario de Cuestionario</title>
+  <link rel="stylesheet" href="/cuestionario-style.css">
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="logo">Cuestionario</div>
+    <div class="menu">
+      <ul>
+        <li><a th:href="@{/}">Inicio</a></li>
+        <li><a th:href="@{/cuestionarios/nuevo}">Crear cuestionario</a></li>
+        <li><a th:href="@{/cuestionarios}">Lista de Cuestionarios</a></li>
+      </ul>
+    </div>
+    <div class="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="title" th:text="${titulo}">Crea un nuevo cuestionario</div>
+    <form th:action="@{/cuestionarios/guardar}" th:object="${cuestionario}" method="post">
+      <div class="cuestionario-details">
+
+        <div class="input-box">
+          <span class="details">Título</span>
+          <input type="text" class="form-control" th:field="*{titulo}" placeholder="Ingrese el título" required />
+        </div>
+
+        <div class="input-box">
+          <span class="details">Descripción</span>
+          <input type="text" class="form-control" th:field="*{descripcion}" placeholder="Ingrese la descripción" required />
+        </div>
+
+        <div class="input-box">
+          <span class="details">Fecha</span>
+          <input type="date" class="form-control" th:field="*{fecha}" required />
+        </div>
+
+        <div class="input-box">
+          <span class="details">Hora de inicio</span>
+          <input type="time" class="form-control" th:field="*{horaInicio}" required />
+        </div>
+
+        <div class="input-box">
+          <span class="details">Hora de fin</span>
+          <input type="time" class="form-control" th:field="*{horaFin}" required />
+        </div>
+
+        <div class="input-box">
+          <span class="details">Duración (min)</span>
+          <input type="number" class="form-control" th:field="*{duracion}" required />
+        </div>
+
+        <input type="hidden" th:field="*{id}" />
+
+      </div>
+      <div class="button">
+        <input type="submit" class="btn btn-primary" value="Guardar">
+      </div>
+      <div class="button-cancel">
+        <a th:href="@{/cuestionarios}" class="btn-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+
+  <script src="/navbar.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${titulo}">Lista de Cuestionarios</title>
+    <link rel="stylesheet" href="/cuestionario-style.css">
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="logo">Cuestionario</div>
+      <div class="menu">
+        <ul>
+          <li><a th:href="@{/}">Inicio</a></li>
+          <li><a th:href="@{/cuestionarios/nuevo}">Crear cuestionario</a></li>
+          <li><a th:href="@{/cuestionarios}">Lista de Cuestionarios</a></li>
+        </ul>
+      </div>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+
+    <div class="container">
+      <!-- Título dinámico -->
+      <div class="title" th:text="${titulo}">Lista de Cuestionarios</div>
+      
+      <!-- Mensaje si no hay cuestionarios -->
+      <div th:if="${cuestionarios.empty}">
+        <div class="alert alert-info">No hay cuestionarios disponibles</div>
+      </div>
+      
+      <!-- Tabla de cuestionarios -->
+      <table class="data-table" th:unless="${cuestionarios.empty}">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Fecha</th>
+            <th>Hora de inicio</th>
+            <th>Hora de fin</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="cuestionario : ${cuestionarios}">
+            <td th:text="${cuestionario.id}"></td>
+            <td th:text="${cuestionario.titulo}"></td>
+            <td th:text="${cuestionario.descripcion}"></td>
+            <td th:text="${#temporals.format(cuestionario.fecha, 'yyyy-MM-dd')}"></td>
+            <td th:text="${#temporals.format(cuestionario.horaInicio, 'hh:mm a')}"></td>
+            <td th:text="${#temporals.format(cuestionario.horaFin, 'hh:mm a')}"></td>
+            <td>
+              <a th:href="@{/cuestionarios/editar/{id}(id=${cuestionario.id})}" class="action-link edit-link">Editar</a>
+              <a th:href="@{/cuestionarios/eliminar/{id}(id=${cuestionario.id})}" class="action-link delete-link" onclick="return confirm('¿Seguro que deseas eliminar el registro?')">Eliminar</a>
+            </td>              
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="create-btn-container">
+        <a th:href="@{/cuestionarios/nuevo}" class="btn-secondary">Nuevo Cuestionario</a>
+      </div>      
+    </div>
+
+    <script src="/navbar.js"></script>
+  </body>
+</html>
