@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.time.Duration;
 
 @Controller
 @RequestMapping("/cuestionarios")
@@ -35,7 +36,26 @@ public class CuestionarioController {
     }
 
     @PostMapping("/guardar")
-    public String guardarCuestionario(@ModelAttribute Cuestionario cuestionario) {
+    public String guardarCuestionario(@ModelAttribute Cuestionario cuestionario, Model model) {
+        // Validar que la fecha de inicio sea anterior a la fecha final
+        if (cuestionario.getFechaInicio().isAfter(cuestionario.getFechaFinal())) {
+            model.addAttribute("error", "La fecha de inicio debe ser anterior a la fecha final.");
+            return "cuestionarios/formulario";
+        }
+    
+        // Validar que la duración sea positiva
+        if (cuestionario.getDuracion() <= 0) {
+            model.addAttribute("error", "La duración debe ser un valor positivo.");
+            return "cuestionarios/formulario";
+        }
+    
+        // Validar que la duración no exceda el tiempo entre fechaInicio y fechaFinal
+        long minutosEntreHoras = Duration.between(cuestionario.getFechaInicio(), cuestionario.getFechaFinal()).toMinutes();
+    
+        if (cuestionario.getDuracion() > minutosEntreHoras) {
+            model.addAttribute("error", "La duración no puede ser mayor al tiempo entre la fecha de inicio y la fecha final.");
+            return "cuestionarios/formulario";
+        }
         cuestionarioService.saveCuestionario(cuestionario);
         return "redirect:/cuestionarios";
     }
