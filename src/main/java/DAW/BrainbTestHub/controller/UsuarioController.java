@@ -28,7 +28,7 @@ public class UsuarioController {
         return "usuarios/lista";
     }
 
-    @GetMapping("/nuevo")
+    @GetMapping("/registro")
     public String mostrarFormulario(Model model) {
         model.addAttribute("usuario", new Usuario());
         model.addAttribute("titulo", "Nuevo Usuario");
