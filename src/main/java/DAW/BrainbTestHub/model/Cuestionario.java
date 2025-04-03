@@ -2,7 +2,6 @@ package DAW.BrainbTestHub.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "cuestionarios")
@@ -19,10 +18,7 @@ public class Cuestionario {
     private String descripcion;
 
     @Column(nullable = false)
-    private LocalDateTime fechaInicio; 
-
-    @Column(nullable = false)
-    private LocalDateTime fechaFinal;
+    private LocalDate fecha;
 
     @Column(nullable = false)
     private int duracion;
@@ -30,8 +26,8 @@ public class Cuestionario {
     // Asigna la fecha actual si no se proporciona
     @PrePersist
     protected void prePersist() {
-        if (fechaInicio == null) {
-            fechaInicio = LocalDateTime.now();
+        if (fecha == null) {
+            fecha = LocalDate.now();
         }
     }
 
@@ -45,11 +41,8 @@ public class Cuestionario {
     public String getDescripcion() { return descripcion; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public LocalDateTime getFechaInicio() { return fechaInicio; }
-    public void setFechaInicio(LocalDateTime fechaInicio) { this.fechaInicio = fechaInicio; }
-
-    public LocalDateTime getFechaFinal() { return fechaFinal; }
-    public void setFechaFinal(LocalDateTime fechaFinal) { this.fechaFinal = fechaFinal; }
+    public LocalDate getFecha() { return fecha; }
+    public void setFecha(LocalDate fecha) { this.fecha = fecha; }
 
     public int getDuracion() { return duracion; }
     public void setDuracion(int duracion) { this.duracion = duracion; }
