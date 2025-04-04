@@ -43,8 +43,9 @@ public class CuestionarioController {
             return "cuestionarios/formulario";
         }
 
-        int duracionCalculada = java.time.Duration.between(cuestionario.getHoraInicio(), cuestionario.getHoraFin())
-                .toMinutesPart();
+        long duracionCalculada = java.time.Duration.between(cuestionario.getHoraInicio(), cuestionario.getHoraFin())
+                .toMinutes();
+
         if (cuestionario.getDuracion() > duracionCalculada || cuestionario.getDuracion() <= 0) {
             model.addAttribute("error",
                     "La duración debe ser mayor a 0 y menor o igual al tiempo entre inicio y finalización.");
