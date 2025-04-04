@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -23,6 +24,10 @@ public class UsuarioService {
 
     public Usuario getUsuarioById(Long id) {
         return usuarioRepository.findById(id).orElse(null);
+    }
+    
+    public Usuario getUsuarioByNombre(String nombre) {
+        return usuarioRepository.findByNombre(nombre).orElse(null);
     }
 
     public Usuario saveUsuario(Usuario usuario) {

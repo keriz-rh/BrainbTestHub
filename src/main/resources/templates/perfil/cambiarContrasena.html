@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cambiar Contraseña</title>
+  <link rel="stylesheet" href="/cuestionario-style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="logo">Cuestionario</div>
+    <div class="menu">
+      <ul>
+        <li><a th:href="@{/}">Inicio</a></li>
+        <li><a th:href="@{/cuestionarios/nuevo}">Crear cuestionario</a></li>
+        <li><a th:href="@{/cuestionarios}">Lista de Cuestionarios</a></li>
+        <li><a th:href="@{/perfil}"><i class="fas fa-user"></i></a></li>
+      </ul>
+    </div>
+    <div class="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="title">Cambiar contraseña</div>
+    
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    
+    <form th:action="@{/perfil/cambiarContrasena}" method="post">
+      <div class="profile-details">
+        <div class="input-box">
+          <span class="details">Contraseña actual</span>
+          <input type="password" name="contrasenaActual" required />
+        </div>
+
+        <div class="input-box">
+          <span class="details">Nueva contraseña</span>
+          <input type="password" name="nuevaContrasena" required />
+        </div>
+
+        <div class="input-box">
+          <span class="details">Confirmar nueva contraseña</span>
+          <input type="password" name="confirmarContrasena" required />
+        </div>
+      </div>
+
+      <div class="button">
+        <input type="submit" class="btn btn-primary" value="Cambiar Contraseña">
+      </div>
+      <div class="button-cancel">
+        <a th:href="@{/perfil}" class="btn-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+
+  <script src="/navbar.js"></script>
+</body>
+
+</html> 

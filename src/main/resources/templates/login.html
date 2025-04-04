@@ -19,9 +19,19 @@
             Has cerrado sesión correctamente.
         </div>
         
+        <div th:if="${param.eliminado}" class="logout-message">
+            Cuenta eliminada correctamente.
+        </div>
+        
+        <div th:if="${param.nombreCambiado}" class="success-message">
+            Nombre de usuario actualizado. Por favor, inicie sesión nuevamente.
+        </div>
+        
         <div th:if="${registroExitoso}" class="success-message">
             Registro exitoso. Por favor, inicia sesión con tus credenciales.
         </div>
+        
+        <div th:if="${success}" class="success-message" th:text="${success}"></div>
         
         <form th:action="@{/login}" method="post">
             <div class="form-group">

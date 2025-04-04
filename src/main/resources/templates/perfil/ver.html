@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil de usuario</title>
+  <link rel="stylesheet" href="/cuestionario-style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="logo">Cuestionario</div>
+    <div class="menu">
+      <ul>
+        <li><a th:href="@{/}">Inicio</a></li>
+        <li><a th:href="@{/cuestionarios/nuevo}">Crear cuestionario</a></li>
+        <li><a th:href="@{/cuestionarios}">Lista de Cuestionarios</a></li>
+        <li><a th:href="@{/perfil}"><i class="fas fa-user"></i></a></li>
+      </ul>
+    </div>
+    <div class="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="title">Perfil de usuario</div>
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="profile-details">
+      <div class="input-box">
+        <span class="details">Nombre de usuario</span>
+        <div class="profile-value" th:text="${usuario.nombre}"></div>
+      </div>
+
+      <div class="input-box">
+        <span class="details">Correo</span>
+        <div class="profile-value" th:text="${usuario.correo}"></div>
+      </div>
+
+      <div class="input-box">
+        <span class="details">Carnet</span>
+        <div class="profile-value" th:text="${usuario.carnet ?: '-'}"></div>
+      </div>
+    </div>
+
+    <div class="profile-actions">
+      <a th:href="@{/perfil/editar}" class="btn-primary">Editar información</a>
+      <a th:href="@{/perfil/cambiarContrasena}" class="btn-primary">Cambiar contraseña</a>
+      <a th:href="@{/logout}" class="btn-secondary">Cerrar sesión</a>
+      <a href="javascript:void(0);" id="eliminarCuenta" class="btn-danger">Eliminar cuenta</a>
+    </div>
+  </div>
+
+  <!-- Formulario oculto para la eliminación de cuenta -->
+  <form id="eliminarForm" th:action="@{/perfil/eliminar}" method="post" style="display: none;"></form>
+
+  <script src="/navbar.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const eliminarBtn = document.getElementById('eliminarCuenta');
+      const eliminarForm = document.getElementById('eliminarForm');
+      
+      eliminarBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        Swal.fire({
+          title: "¿Estás seguro?",
+          text: "Esta acción no se puede deshacer y perderás todos tus datos.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DE638A",
+          cancelButtonColor: "#777777",
+          confirmButtonText: "Sí, eliminar mi cuenta",
+          cancelButtonText: "Cancelar"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            eliminarForm.submit();
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html> 
