@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -37,18 +38,20 @@ public class UsuarioController {
     @PostMapping("/guardar")
     public String guardarUsuario(@Valid @ModelAttribute Usuario usuario, 
                               BindingResult result,
-                              Model model) {
+                              Model model,
+                              RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("titulo", "Formulario de Usuario");
             return "usuarios/formulario";
         }
         try {
             usuarioService.saveUsuario(usuario);
+            redirectAttributes.addFlashAttribute("mensaje", "Usuario registrado correctamente");
+            return "redirect:/login?registro=exitoso";
         } catch (Exception e) {
             model.addAttribute("error", "Error al guardar: " + e.getMessage());
             return "usuarios/formulario";
         }
-        return "redirect:/usuarios";
     }
 
     @GetMapping("/editar/{id}")
