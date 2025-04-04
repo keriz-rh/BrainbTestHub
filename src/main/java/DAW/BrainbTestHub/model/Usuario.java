@@ -2,8 +2,6 @@ package DAW.BrainbTestHub.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,14 +31,8 @@ public class Usuario {
     @Column(nullable = true)  // Si no es obligatorio, quita `required` del HTML
     private String carnet;
 
-    @NotNull(message = "El rol no puede estar vacío")
-    @Enumerated(EnumType.STRING)
+    @NotBlank(message = "La contraseña no puede estar vacía")
+    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
     @Column(nullable = false)
-    private Rol rol;
-}
-
-enum Rol {
-    DOCENTE,
-    ESTUDIANTE,
-    INVITADO
+    private String contrasena;
 }
