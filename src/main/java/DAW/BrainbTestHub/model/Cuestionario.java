@@ -1,6 +1,7 @@
 package DAW.BrainbTestHub.model;
 
 import jakarta.persistence.*;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -29,6 +30,27 @@ public class Cuestionario {
 
     @Column(nullable = false)
     private LocalTime horaFin;
+
+    @Transient
+    public String validar(){
+        if (duracion <= 0){
+            return "La duracion debe ser un valor positivo";
+
+        }
+        if (horaInicio != null && horaFin != null && !horaInicio.isBefore(horaFin)) {
+            return "La hora de inicio debe ser anterior a la hora de fin.";
+        }
+
+        if (horaInicio != null && horaFin != null) {
+            long minutosDisponibles = Duration.between(horaInicio, horaFin).toMinutes();
+            if (duracion > minutosDisponibles) {
+                return "La duración no puede ser mayor al tiempo disponible entre la hora de inicio y la hora de fin.";
+            }
+        }
+
+        // Todo está válido
+        return null;
+    }
 
     // Asigna la fecha actual si no se proporciona
     @PrePersist

@@ -35,7 +35,16 @@ public class CuestionarioController {
     }
 
     @PostMapping("/guardar")
-    public String guardarCuestionario(@ModelAttribute Cuestionario cuestionario) {
+    public String guardarCuestionario(@ModelAttribute Cuestionario cuestionario, Model model) {
+        String mensajeError = cuestionario.validar();
+    
+        if (mensajeError != null) {
+            // Si hay errores, regresar al formulario con el mensaje
+            model.addAttribute("cuestionario", cuestionario); // Mantener los datos ingresados por el usuario
+            model.addAttribute("mensajeError", mensajeError); // Enviar el mensaje de error a la vista
+            model.addAttribute("titulo", "Crear Cuestionario"); // Título de la vista
+            return "cuestionarios/formulario"; // Volver al formulario
+        }
         cuestionarioService.saveCuestionario(cuestionario);
         return "redirect:/cuestionarios";
     }
