@@ -1,4 +1,3 @@
-/* Estilos para el formulario de registro */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -11,19 +10,20 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #6b4ba3 0%, #8b6fd1 100%);
+    background: linear-gradient(135deg, #4A3267, #DE638A);
     padding: 20px;
 }
 
 .registro-container {
-    background: white;
-    padding: 2.5rem;
-    border-radius: 20px;
+    background: #ffffff;
+    padding: 25px 20px;
+    border-radius: 5px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     width: 100%;
     max-width: 550px;
     position: relative;
     overflow: hidden;
+    color: #333;
 }
 
 .registro-container::before {
@@ -33,25 +33,25 @@ body {
     left: 0;
     width: 100%;
     height: 5px;
-    background: linear-gradient(90deg, #6b4ba3, #8b6fd1);
+    background: linear-gradient(135deg, #4A3267, #DE638A);
 }
 
 h1 {
-    color: #2d2d2d;
+    color: #333;
     margin-bottom: 2rem;
-    text-align: center;
-    font-size: 2rem;
-    font-weight: 600;
+    text-align: left;
+    font-size: 25px;
+    font-weight: 500;
     position: relative;
 }
 
 h1::after {
     content: '';
     display: block;
-    width: 50px;
+    width: 30px;
     height: 3px;
-    background: #6b4ba3;
-    margin: 10px auto;
+    background: linear-gradient(135deg, #4A3267, #DE638A);
+    margin: 10px 0;
     border-radius: 2px;
 }
 
@@ -63,67 +63,68 @@ h1::after {
 label {
     display: block;
     margin-bottom: 0.5rem;
-    color: #2d2d2d;
+    color: #333;
     font-weight: 500;
     font-size: 0.95rem;
 }
 
 input {
     width: 100%;
-    padding: 0.9rem 1rem;
-    border: 2px solid #e1e1e1;
-    border-radius: 12px;
-    font-size: 1rem;
+    height: 45px;
+    padding-left: 15px;
+    border: 1px solid #CCC;
+    border-radius: 5px;
+    font-size: 16px;
     transition: all 0.3s ease;
-    background: #f8f9fa;
+    background: #f9f9f9;
+    color: #333;
 }
 
 input:focus {
     outline: none;
-    border-color: #6b4ba3;
-    background: white;
-    box-shadow: 0 0 0 4px rgba(107, 75, 163, 0.1);
+    border-color: #4A3267;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(74, 50, 103, 0.1);
 }
 
 input::placeholder {
-    color: #999;
+    color: #aaa;
 }
 
 .btn {
     width: 100%;
-    padding: 1rem;
+    height: 45px;
     border: none;
-    border-radius: 12px;
-    font-size: 1rem;
+    border-radius: 5px;
+    font-size: 18px;
     font-weight: 500;
+    letter-spacing: 1px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
     margin-bottom: 1rem;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #6b4ba3 0%, #8b6fd1 100%);
+    background: linear-gradient(135deg, #4A3267, #DE638A);
     color: white;
-    box-shadow: 0 4px 15px rgba(107, 75, 163, 0.2);
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(107, 75, 163, 0.3);
+    background: #4A3267;
+    box-shadow: 0 0 20px 5px #CCC;
 }
 
 .btn-secondary {
-    background-color: #f8f9fa;
-    color: #666;
-    border: 2px solid #e1e1e1;
+    background-color: #eee;
+    color: #333;
+    border: 1px solid #ccc;
 }
 
 .btn-secondary:hover {
-    background-color: #e9ecef;
-    color: #2d2d2d;
+    background-color: #ddd;
+    color: #000;
 }
 
-/* Estilos para mensajes de error y éxito */
 .error-message {
     color: #dc3545;
     margin-bottom: 15px;
@@ -131,7 +132,7 @@ input::placeholder {
     font-weight: 500;
     background-color: rgba(220, 53, 69, 0.1);
     padding: 10px;
-    border-radius: 8px;
+    border-radius: 5px;
 }
 
 .success-message {
@@ -141,10 +142,9 @@ input::placeholder {
     font-weight: 500;
     background-color: rgba(40, 167, 69, 0.1);
     padding: 10px;
-    border-radius: 8px;
+    border-radius: 5px;
 }
 
-/* Estilo para los errores de validación de campos */
 .error {
     color: #dc3545;
     font-size: 0.85rem;
@@ -165,28 +165,27 @@ input::placeholder {
 }
 
 .nav-links a {
-    color: #6b4ba3;
+    color: #4A3267;
     text-decoration: none;
     font-size: 0.9rem;
     transition: color 0.3s ease;
 }
 
 .nav-links a:hover {
-    color: #8b6fd1;
+    color: #DE638A;
     text-decoration: underline;
 }
 
-/* Responsive */
 @media (max-width: 480px) {
     .registro-container {
-        padding: 1.5rem;
+        padding: 20px 15px;
     }
 
     h1 {
-        font-size: 1.75rem;
+        font-size: 22px;
     }
 
     input {
-        padding: 0.8rem;
+        height: 42px;
     }
-} 
+}

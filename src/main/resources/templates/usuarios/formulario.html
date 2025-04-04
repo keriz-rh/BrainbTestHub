@@ -52,7 +52,7 @@
             <input type="hidden" th:field="*{id}" />
             
             <div class="form-group">
-                <label for="nombre">Nombre:</label>
+                <label for="nombre">Nombre de usuario:</label>
                 <input type="text" id="nombre" th:field="*{nombre}" placeholder="Ingrese su nombre" required>
                 <div th:if="${#fields.hasErrors('nombre')}" class="error" th:errors="*{nombre}"></div>
             </div>
@@ -64,7 +64,7 @@
             </div>
 
             <div class="form-group">
-                <label for="carnet">Carnet (opcional):</label>
+                <label for="carnet">Carnet:</label>
                 <input type="text" id="carnet" th:field="*{carnet}" placeholder="Ingrese su carnet">
                 <div th:if="${#fields.hasErrors('carnet')}" class="error" th:errors="*{carnet}"></div>
             </div>

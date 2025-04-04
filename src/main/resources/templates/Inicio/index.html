@@ -7,214 +7,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/index-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #6b4ba3 0%, #8b6fd1 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            width: 100%;
-            max-width: 1200px;
-            min-height: 80vh;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, #6b4ba3, #8b6fd1);
-        }
-
-        .header {
-            max-width: 800px;
-            margin: 0 auto 4rem;
-        }
-
-        h1 {
-            color: #2d2d2d;
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-        }
-
-        .welcome-text {
-            color: #666;
-            font-size: 1.4rem;
-            line-height: 1.6;
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2.5rem;
-            margin: 0 auto 4rem;
-            max-width: 1100px;
-            flex-grow: 1;
-        }
-
-        .feature {
-            padding: 2.5rem;
-            background: #f8f9fa;
-            border-radius: 16px;
-            transition: all 0.3s ease;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-height: 250px;
-        }
-
-        .feature:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .feature h3 {
-            color: #2d2d2d;
-            margin-bottom: 1.5rem;
-            font-size: 1.4rem;
-        }
-
-        .feature p {
-            color: #666;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            text-align: left;
-        }
-
-        .buttons {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            max-width: 800px;
-            margin: 0 auto;
-            padding-top: 2rem;
-        }
-
-        .btn {
-            padding: 1.2rem 3rem;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 250px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #6b4ba3 0%, #8b6fd1 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(107, 75, 163, 0.2);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(107, 75, 163, 0.3);
-        }
-
-        .btn-secondary {
-            background-color: #f8f9fa;
-            color: #666;
-            border: 2px solid #e1e1e1;
-        }
-
-        .btn-secondary:hover {
-            background-color: #e9ecef;
-            color: #2d2d2d;
-        }
-
-        @media (max-width: 1200px) {
-            .container {
-                max-width: 95%;
-                padding: 2.5rem;
-            }
-
-            .features {
-                gap: 2rem;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .features {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            .welcome-text {
-                font-size: 1.2rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 2rem;
-                min-height: auto;
-            }
-
-            .features {
-                grid-template-columns: 1fr;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .buttons {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-            }
-
-            .feature {
-                min-height: auto;
-                padding: 2rem;
-            }
-        }
-    </style>
 </head>
+
 <body>
+    <nav class="navbar">
+        <div class="logo">
+            <a th:href="@{/}" style="color: white; text-decoration: none;">BrainTestHub</a>
+        </div>
+        <div class="menu" sec:authorize="isAuthenticated()">
+            <ul>
+                <li><a th:href="@{/logout}">Inicio</a></li>
+                <li><a th:href="@{/cuestionarios/nuevo}">Crear cuestionario</a></li>
+                <li><a th:href="@{/cuestionarios}">Lista de Cuestionarios</a></li>
+                <li><a th:href="@{/perfil}"><i class="fas fa-user"></i> Perfil</a></li>
+            </ul>
+        </div>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
     <div class="container">
         <div class="header">
-            <h1>BrainTestHub</h1>
-            <p class="welcome-text" th:text="${mensaje}">¡Bienvenido a BrainTestHub!</p>
+            <h1 th:text="${mensaje}">¡Bienvenido a BrainTestHub!</h1>
         </div>
-        
+
         <div class="features">
             <div class="feature">
                 <h3>Cuestionarios Dinámicos</h3>
@@ -230,10 +53,20 @@
             </div>
         </div>
 
-        <div class="buttons">
+        <div class="buttons" sec:authorize="!isAuthenticated()">
             <a href="/login" class="btn btn-primary">Iniciar Sesión</a>
             <a href="/usuarios/registro" class="btn btn-secondary">Registrarse</a>
         </div>
     </div>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.querySelector('.menu');
+            menu.classList.toggle('active');
+        }
+    </script>
+
+    <script src="/navbar.js"></script>
+
 </body>
-</html> 
+</html>
