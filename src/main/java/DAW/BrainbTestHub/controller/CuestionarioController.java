@@ -21,7 +21,7 @@ public class CuestionarioController {
         List<Cuestionario> cuestionarios = cuestionarioService.getAllCuestionarios();
         System.out.println("DEBUG - Cuestionarios encontrados: " + cuestionarios.size());
         cuestionarios.forEach(c -> System.out.println(c.getTitulo()));
-        
+
         model.addAttribute("cuestionarios", cuestionarios);
         model.addAttribute("titulo", "Lista de Cuestionarios");
         return "cuestionarios/lista";
@@ -35,7 +35,24 @@ public class CuestionarioController {
     }
 
     @PostMapping("/guardar")
-    public String guardarCuestionario(@ModelAttribute Cuestionario cuestionario) {
+    public String guardarCuestionario(@ModelAttribute Cuestionario cuestionario, Model model) {
+        if (cuestionario.getHoraInicio().isAfter(cuestionario.getHoraFin())) {
+            model.addAttribute("error", "La hora de inicio debe ser antes de la hora de finalización.");
+            model.addAttribute("cuestionario", cuestionario);
+            model.addAttribute("titulo", "Crear Cuestionario");
+            return "cuestionarios/formulario";
+        }
+
+        int duracionCalculada = java.time.Duration.between(cuestionario.getHoraInicio(), cuestionario.getHoraFin())
+                .toMinutesPart();
+        if (cuestionario.getDuracion() > duracionCalculada || cuestionario.getDuracion() <= 0) {
+            model.addAttribute("error",
+                    "La duración debe ser mayor a 0 y menor o igual al tiempo entre inicio y finalización.");
+            model.addAttribute("cuestionario", cuestionario);
+            model.addAttribute("titulo", "Crear Cuestionario");
+            return "cuestionarios/formulario";
+        }
+
         cuestionarioService.saveCuestionario(cuestionario);
         return "redirect:/cuestionarios";
     }
