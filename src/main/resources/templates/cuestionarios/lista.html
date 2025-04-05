@@ -39,6 +39,8 @@
         <div class="alert alert-info">No hay cuestionarios disponibles</div>
       </div>
       
+      <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+
       <!-- Tabla de cuestionarios -->
       <table class="data-table" th:unless="${cuestionarios.empty}">
         <thead>
@@ -49,6 +51,7 @@
             <th>Fecha</th>
             <th>Hora de inicio</th>
             <th>Hora de fin</th>
+            <th>Duración (m)</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -60,6 +63,7 @@
             <td th:text="${#temporals.format(cuestionario.fecha, 'yyyy-MM-dd')}"></td>
             <td th:text="${#temporals.format(cuestionario.horaInicio, 'hh:mm a')}"></td>
             <td th:text="${#temporals.format(cuestionario.horaFin, 'hh:mm a')}"></td>
+            <td th:text="${cuestionario.duracion}"></td>
             <td>
               <a th:href="@{/cuestionarios/editar/{id}(id=${cuestionario.id})}" class="action-link edit-link">Editar</a>
               <a th:href="@{/cuestionarios/eliminar/{id}(id=${cuestionario.id})}" class="action-link delete-link" onclick="return confirm('¿Seguro que deseas eliminar el registro?')">Eliminar</a>

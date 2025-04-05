@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class CuestionarioController {
     }
 
     @PostMapping("/guardar")
-    public String guardarCuestionario(@ModelAttribute Cuestionario cuestionario, Model model) {
+    public String guardarCuestionario(@ModelAttribute Cuestionario cuestionario, Model model, RedirectAttributes redirectAttributes) {
         if (cuestionario.getHoraInicio().isAfter(cuestionario.getHoraFin())) {
             model.addAttribute("error", "La hora de inicio debe ser antes de la hora de finalización.");
             model.addAttribute("cuestionario", cuestionario);
@@ -55,6 +56,7 @@ public class CuestionarioController {
         }
 
         cuestionarioService.saveCuestionario(cuestionario);
+        redirectAttributes.addFlashAttribute("mensaje", "El cuestionario se ha guardado correctamente");
         return "redirect:/cuestionarios";
     }
 
