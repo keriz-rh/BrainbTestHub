@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title th:text="${titulo}">Lista de Cuestionarios</title>
     <link rel="stylesheet" href="/cuestionario-style.css">
+<<<<<<< Updated upstream
+=======
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+>>>>>>> Stashed changes
   </head>
   <body>
     <nav class="navbar">
@@ -55,15 +61,36 @@
             <td th:text="${#temporals.format(cuestionario.horaFin, 'hh:mm a')}"></td>
             <td>
               <a th:href="@{/cuestionarios/editar/{id}(id=${cuestionario.id})}" class="action-link edit-link">Editar</a>
+              <a href="javascript:void(0);" th:onclick="'confirmarEliminacion(' + ${cuestionario.id} + ')'" class="action-link delete-link">Eliminar</a>
             </td>              
           </tr>
         </tbody>
       </table>
+
       <div class="create-btn-container">
         <a th:href="@{/cuestionarios/nuevo}" class="btn-secondary">Nuevo Cuestionario</a>
       </div>      
     </div>
 
     <script src="/navbar.js"></script>
+    <script>
+      function confirmarEliminacion(id) {
+        Swal.fire({
+          title: "¿Estás seguro?",
+          text: "Esta acción no se puede deshacer y perderás todos los datos del cuestionario.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DE638A",
+          cancelButtonColor: "#777777",
+          confirmButtonText: "Sí, eliminar",
+          cancelButtonText: "Cancelar"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Redireccionar a la URL de eliminación
+            window.location.href = "/cuestionarios/eliminar/" + id;
+          }
+        });
+      }
+    </script>
   </body>
 </html>
