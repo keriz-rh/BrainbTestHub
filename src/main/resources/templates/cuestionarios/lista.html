@@ -55,12 +55,10 @@
             <td th:text="${#temporals.format(cuestionario.horaFin, 'hh:mm a')}"></td>
             <td>
               <a th:href="@{/cuestionarios/editar/{id}(id=${cuestionario.id})}" class="action-link edit-link">Editar</a>
-              <a th:href="@{/cuestionarios/eliminar/{id}(id=${cuestionario.id})}" class="action-link delete-link" onclick="return confirm('¿Seguro que deseas eliminar el registro?')">Eliminar</a>
             </td>              
           </tr>
         </tbody>
       </table>
-      
       <div class="create-btn-container">
         <a th:href="@{/cuestionarios/nuevo}" class="btn-secondary">Nuevo Cuestionario</a>
       </div>      
