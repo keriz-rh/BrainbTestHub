@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @Controller
 @RequestMapping("/perfil")
@@ -20,24 +22,18 @@ public class PerfilController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public String verPerfil(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+    public String verPerfil(@AuthenticationPrincipal OidcUser principal, Model model) {
+        if (principal == null) {
             return "redirect:/login";
         }
-
-        String nombreUsuario = "";
-        if (auth.getPrincipal() instanceof UserDetails) {
-            nombreUsuario = ((UserDetails) auth.getPrincipal()).getUsername();
-        } else {
-            nombreUsuario = auth.getName();
-        }
-
-        Usuario usuario = usuarioService.getUsuarioByNombre(nombreUsuario);
-        if (usuario == null) {
-            return "redirect:/login";
-        }
-
+        model.addAttribute("nombre", principal.getFullName() != null ? principal.getFullName() : principal.getGivenName());
+        model.addAttribute("email", principal.getEmail());
+        model.addAttribute("foto", principal.getPicture());
+        // Para evitar errores en la vista, pasar un objeto usuario vacío
+        DAW.BrainbTestHub.model.Usuario usuario = new DAW.BrainbTestHub.model.Usuario();
+        usuario.setNombre("");
+        usuario.setCorreo("");
+        usuario.setCarnet("");
         model.addAttribute("usuario", usuario);
         return "perfil/ver";
     }

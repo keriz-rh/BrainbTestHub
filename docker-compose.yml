@@ -10,6 +10,8 @@ services:
       DB_URL: jdbc:postgresql://db:5432/brainb_test_hub
       DB_USER: postgres
       DB_PASSWORD: postgres
+    env_file:
+      - .env
     depends_on:
       - db
 

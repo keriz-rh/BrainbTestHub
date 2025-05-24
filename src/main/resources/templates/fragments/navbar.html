@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+  <nav class="navbar" th:fragment="navbar">
+    <div class="logo">
+      <a th:href="@{/}" style="color: white; text-decoration: none;">BrainTestHub</a>
+    </div>
+    <div class="menu" sec:authorize="isAuthenticated()">
+      <ul>
+        <li><a th:href="@{/}">Inicio</a></li>
+        <li><a th:href="@{/cuestionarios/nuevo}">Crear cuestionario</a></li>
+        <li><a th:href="@{/cuestionarios}">Lista de Cuestionarios</a></li>
+        <li><a th:href="@{/perfil}"><i class="fas fa-user"></i></a></li>
+        <li><a th:href="@{/logout}" class="btn-logout">Cerrar sesión</a></li>
+      </ul>
+    </div>
+    <div class="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+</body>
+</html> 

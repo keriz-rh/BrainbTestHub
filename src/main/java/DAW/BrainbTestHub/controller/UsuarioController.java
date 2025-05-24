@@ -28,12 +28,15 @@ public class UsuarioController {
         return "usuarios/lista";
     }
 
+    // --- REGISTRO LOCAL DESHABILITADO: Ahora todo el registro se gestiona en Auth0 ---
+    /*
     @GetMapping("/registro")
     public String mostrarFormulario(Model model) {
         model.addAttribute("usuario", new Usuario());
         model.addAttribute("titulo", "Nuevo Usuario");
         return "usuarios/formulario";
     }
+    */
 
     @PostMapping("/guardar")
     public String guardarUsuario(@Valid @ModelAttribute Usuario usuario, 

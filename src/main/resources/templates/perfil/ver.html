@@ -12,29 +12,18 @@
 </head>
 
 <body>
-  <nav class="navbar">
-    <div class="logo">
-      <a th:href="@{/}" style="color: white; text-decoration: none;">BrainTestHub</a>
-  </div>    <div class="menu">
-      <ul>
-        <li><a th:href="@{/}">Inicio</a></li>
-        <li><a th:href="@{/cuestionarios/nuevo}">Crear cuestionario</a></li>
-        <li><a th:href="@{/cuestionarios}">Lista de Cuestionarios</a></li>
-        <li><a th:href="@{/perfil}"><i class="fas fa-user"></i></a></li>
-      </ul>
-    </div>
-    <div class="hamburger">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-  </nav>
+  <div th:replace="fragments/navbar :: navbar"></div>
 
   <div class="container">
     <div class="title">Perfil de usuario</div>
 
     <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
     <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <h2>Perfil de usuario</h2>
+    <img th:src="${foto}" alt="Foto de perfil" style="width:80px; border-radius:50%;">
+    <p><strong>Nombre:</strong> <span th:text="${nombre}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${email}"></span></p>
 
     <div class="profile-details">
       <div class="input-box">
@@ -63,8 +52,6 @@
 
   <!-- Formulario oculto para la eliminación de cuenta -->
   <form id="eliminarForm" th:action="@{/perfil/eliminar}" method="post" style="display: none;"></form>
-
-  <script src="/navbar.js"></script>
   
   <script>
     document.addEventListener('DOMContentLoaded', function() {

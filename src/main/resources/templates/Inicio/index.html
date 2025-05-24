@@ -14,24 +14,7 @@
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="logo">
-            <a th:href="@{/}" style="color: white; text-decoration: none;">BrainTestHub</a>
-        </div>
-        <div class="menu" sec:authorize="isAuthenticated()">
-            <ul>
-                <li><a th:href="@{/logout}">Inicio</a></li>
-                <li><a th:href="@{/cuestionarios/nuevo}">Crear cuestionario</a></li>
-                <li><a th:href="@{/cuestionarios}">Lista de Cuestionarios</a></li>
-                <li><a th:href="@{/perfil}"><i class="fas fa-user"></i> Perfil</a></li>
-            </ul>
-        </div>
-        <div class="hamburger" onclick="toggleMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </nav>
+    <div th:replace="fragments/navbar :: navbar"></div>
 
     <div class="container">
         <div class="header">
@@ -54,8 +37,8 @@
         </div>
 
         <div class="buttons" sec:authorize="!isAuthenticated()">
-            <a href="/login" class="btn btn-primary">Iniciar Sesión</a>
-            <a href="/usuarios/registro" class="btn btn-secondary">Registrarse</a>
+            <a th:href="@{/oauth2/authorization/auth0}" class="btn btn-primary">Iniciar Sesión</a>
+            <a th:href="@{/oauth2/authorization/auth0}" class="btn btn-secondary">Registrarse</a>
         </div>
     </div>
 

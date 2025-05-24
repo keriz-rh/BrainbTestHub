@@ -8,27 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   </head>
   <body>
-    <nav class="navbar">
-      <div class="logo">
-        <a th:href="@{/}" style="color: white; text-decoration: none;">
-          BrainbTestHub
-        </a>
-      </div>
-      
-      <div class="menu">
-        <ul>
-          <li><a th:href="@{/}">Inicio</a></li>
-          <li><a th:href="@{/cuestionarios/nuevo}">Crear cuestionario</a></li>
-          <li><a th:href="@{/cuestionarios}">Lista de Cuestionarios</a></li>
-          <li><a th:href="@{/perfil}"><i class="fas fa-user"></i></a></li>
-        </ul>
-      </div>
-      <div class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </nav>
+    <div th:replace="fragments/navbar :: navbar"></div>
 
     <div class="container">
       <!-- Título dinámico -->
