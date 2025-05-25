@@ -20,10 +20,10 @@
     <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
     <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-    <h2>Perfil de usuario</h2>
     <img th:src="${foto}" alt="Foto de perfil" style="width:80px; border-radius:50%;">
     <p><strong>Nombre:</strong> <span th:text="${nombre}"></span></p>
     <p><strong>Email:</strong> <span th:text="${email}"></span></p>
+    <p><strong>Rol:</strong> <span th:text="${#strings.arrayJoin(roles, ', ')}"></span></p>
 
     <div class="profile-details">
       <div class="input-box">

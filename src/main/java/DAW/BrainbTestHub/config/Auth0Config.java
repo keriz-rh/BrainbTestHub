@@ -8,9 +8,16 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class Auth0Config {
 
     @Value("${auth0.domain}")
@@ -22,17 +29,31 @@ public class Auth0Config {
     @Value("${auth0.audience}")
     private String audience;
 
+    @Autowired
+    private OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new CustomJwtGrantedAuthoritiesConverter());
+
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/", "/login", "/error", "/usuarios/registro", "/usuarios/guardar").permitAll()
+                .requestMatchers("/admin/**").hasRole("admin")
+                .requestMatchers("/user/**").hasAnyRole("user", "admin")
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
                 .loginPage("/login")
                 .defaultSuccessUrl("/perfil", true)
+                .userInfoEndpoint(userInfo -> userInfo
+                    .oidcUserService(oidcUserService)
+                )
+            )
+            .oauth2ResourceServer(oauth2 -> oauth2
+                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter))
             )
             .logout(logout -> logout
                 .logoutSuccessHandler(logoutSuccessHandler())

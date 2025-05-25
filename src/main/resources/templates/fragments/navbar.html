@@ -8,7 +8,7 @@
     <div class="menu" sec:authorize="isAuthenticated()">
       <ul>
         <li><a th:href="@{/}">Inicio</a></li>
-        <li><a th:href="@{/cuestionarios/nuevo}">Crear cuestionario</a></li>
+        <li sec:authorize="hasRole('admin')"><a th:href="@{/cuestionarios/nuevo}">Crear cuestionario</a></li>
         <li><a th:href="@{/cuestionarios}">Lista de Cuestionarios</a></li>
         <li><a th:href="@{/perfil}"><i class="fas fa-user"></i></a></li>
         <li><a th:href="@{/logout}" class="btn-logout">Cerrar sesión</a></li>

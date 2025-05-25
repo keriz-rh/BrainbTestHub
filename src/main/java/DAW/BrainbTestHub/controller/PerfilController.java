@@ -29,6 +29,12 @@ public class PerfilController {
         model.addAttribute("nombre", principal.getFullName() != null ? principal.getFullName() : principal.getGivenName());
         model.addAttribute("email", principal.getEmail());
         model.addAttribute("foto", principal.getPicture());
+
+        // Obtener los roles directamente del claim personalizado
+        Object rolesObj = principal.getClaims().get("https://brainbtesthub.com/roles");
+        java.util.List<String> roles = rolesObj instanceof java.util.List ? (java.util.List<String>) rolesObj : java.util.List.of();
+        model.addAttribute("roles", roles);
+
         // Para evitar errores en la vista, pasar un objeto usuario vacío
         DAW.BrainbTestHub.model.Usuario usuario = new DAW.BrainbTestHub.model.Usuario();
         usuario.setNombre("");
