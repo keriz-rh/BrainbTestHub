@@ -1,8 +1,3 @@
-
-
-
-
-
 # BrainTestHub
 
 El proyecto es una aplicación web orientada a la creación, gestión y visualización de cuestionarios, pensada para un entorno educativo o de autoevaluación. Se destaca por ofrecer funcionalidades clave en la administración de cuestionarios, usuarios y seguridad de acceso.
@@ -19,10 +14,32 @@ El proyecto es una aplicación web orientada a la creación, gestión y visualiz
 + La aplicación permite registrar usuarios con validaciones como correos únicos y contraseñas seguras.
 + Los usuarios pueden editar su perfil, cambiar su contraseña y eliminar su cuenta.
 
+## Cambios Recientes
+
++ Implementación de sistema de roles (ADMIN, USER)
++ Mejora en la gestión de cuestionarios con validaciones adicionales
++ Actualización de la interfaz de usuario para mejor experiencia
++ Optimización de la seguridad en el manejo de sesiones
++ Integración completa con Auth0 para autenticación social (Google) y correo electrónico
++ Despliegue automatizado en Render con rama staging
++ Migración a base de datos PostgreSQL en Neon.tech
++ Implementación de protección de rutas con JWT
+
 ## Autenticación y Seguridad:
 
-+ Se implementan mecanismos de inicio de sesión mediante Spring Security para proteger el acceso y la  edición de datos sensibles.
++ Se implementan mecanismos de inicio de sesión mediante Spring Security para proteger el acceso y la edición de datos sensibles.
 + Existe un modelo de usuario que extiende UserDetails para integrarse con el sistema de seguridad.
++ Autenticación social mediante Google y correo electrónico usando Auth0
++ Gestión centralizada de roles y permisos desde el dashboard de Auth0
++ Protección de rutas mediante tokens JWT
++ Control de acceso basado en roles (RBAC)
+
+## Despliegue y Base de Datos
+
++ Backend y Frontend desplegados en Render con despliegue automático desde rama staging
++ Base de datos PostgreSQL alojada en Neon.tech
++ Configuración segura mediante variables de entorno
++ Credenciales y datos sensibles protegidos mediante herramientas de Render y Auth0
 
 ## Interfaz de Usuario
 
