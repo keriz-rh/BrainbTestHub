@@ -79,7 +79,7 @@ El proyecto es una aplicación web orientada a la creación, gestión y visualiz
 ## Integrantes
 
 + Ángel Josué Cortez Zaldaña – CZ23002
-+ Julio César Dávila Peñate – DP2100
++ Julio César Dávila Peñate – DP21008
 + Katya Michelle Asencio Bernal – AB23007
 + Kevin Armando Rivera Henríquez – RH16042
 + Gerson Balmore López Rodríguez – LR20029
