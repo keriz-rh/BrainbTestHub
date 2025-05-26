@@ -39,7 +39,7 @@ public class Auth0Config {
 
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/css/**", "/js/**", "/images/**", "/*.css", "/*.js", "/static/**").permitAll()
                 .requestMatchers("/", "/login", "/error", "/usuarios/registro", "/usuarios/guardar").permitAll()
                 .requestMatchers("/admin/**").hasRole("admin")
                 .requestMatchers("/user/**").hasAnyRole("user", "admin")
@@ -47,7 +47,7 @@ public class Auth0Config {
             )
             .oauth2Login(oauth2 -> oauth2
                 .loginPage("/login")
-                .defaultSuccessUrl("/perfil", true)
+                .defaultSuccessUrl("/dashboard", true)
                 .userInfoEndpoint(userInfo -> userInfo
                     .oidcUserService(oidcUserService)
                 )

@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Perfil de usuario</title>
   <link rel="stylesheet" href="/cuestionario-style.css">
+  <link rel="stylesheet" href="/perfil-style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -14,69 +15,85 @@
 <body>
   <div th:replace="fragments/navbar :: navbar"></div>
 
+  <!-- Formas geométricas decorativas -->
+  <div class="geometric-shape shape-1"></div>
+  <div class="geometric-shape shape-2"></div>
+
   <div class="container">
     <div class="title">Perfil de usuario</div>
 
     <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
     <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-    <img th:src="${foto}" alt="Foto de perfil" style="width:80px; border-radius:50%;">
-    <p><strong>Nombre:</strong> <span th:text="${nombre}"></span></p>
-    <p><strong>Email:</strong> <span th:text="${email}"></span></p>
-    <p><strong>Rol:</strong> <span th:text="${#strings.arrayJoin(roles, ', ')}"></span></p>
+    <!-- Foto de perfil -->
+    <img th:src="${foto}" 
+         alt="Foto de perfil" 
+         class="profile-photo"
+         onerror="handleImageError(this)">
 
-    <div class="profile-details">
-      <div class="input-box">
-        <span class="details">Nombre de usuario</span>
-        <div class="profile-value" th:text="${usuario.nombre}"></div>
-      </div>
-
-      <div class="input-box">
-        <span class="details">Correo</span>
-        <div class="profile-value" th:text="${usuario.correo}"></div>
-      </div>
-
-      <div class="input-box">
-        <span class="details">Carnet</span>
-        <div class="profile-value" th:text="${usuario.carnet ?: '-'}"></div>
-      </div>
+    <!-- Nombre -->
+    <div class="profile-field">
+      <h3>Nombre</h3>
+      <p class="profile-info" th:text="${nombre}">Nombre del usuario</p>
     </div>
 
-    <div class="profile-actions">
-      <a th:href="@{/perfil/editar}" class="btn-primary">Editar información</a>
-      <a th:href="@{/perfil/cambiarContrasena}" class="btn-primary">Cambiar contraseña</a>
-      <a th:href="@{/logout}" class="btn-secondary">Cerrar sesión</a>
-      <a href="javascript:void(0);" id="eliminarCuenta" class="btn-danger">Eliminar cuenta</a>
+    <!-- Correo electrónico -->
+    <div class="profile-field">
+      <h3>Correo electrónico</h3>
+      <p class="profile-info" th:text="${email}">correo@ejemplo.com</p>
+    </div>
+
+    <!-- Rol -->
+    <div class="profile-field">
+      <h3>Rol</h3>
+      <p class="profile-info" th:text="${#strings.arrayJoin(roles, ', ')}">Rol del usuario</p>
     </div>
   </div>
 
-  <!-- Formulario oculto para la eliminación de cuenta -->
-  <form id="eliminarForm" th:action="@{/perfil/eliminar}" method="post" style="display: none;"></form>
+  <script src="/navbar.js"></script>
   
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const eliminarBtn = document.getElementById('eliminarCuenta');
-      const eliminarForm = document.getElementById('eliminarForm');
+      // Manejo de notificaciones con SweetAlert2
+      const success = /*[[${success}]]*/ null;
+      const error = /*[[${error}]]*/ null;
       
-      eliminarBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        
+      if (success) {
         Swal.fire({
-          title: "¿Estás seguro?",
-          text: "Esta acción no se puede deshacer y perderás todos tus datos.",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#DE638A",
-          cancelButtonColor: "#777777",
-          confirmButtonText: "Sí, eliminar mi cuenta",
-          cancelButtonText: "Cancelar"
-        }).then((result) => {
-          if (result.isConfirmed) {
-            eliminarForm.submit();
-          }
+          title: "¡Éxito!",
+          text: success,
+          icon: "success",
+          confirmButtonColor: "#481e8a",
+          confirmButtonText: "Aceptar"
         });
-      });
+      }
+      
+      if (error) {
+        Swal.fire({
+          title: "Error",
+          text: error,
+          icon: "error",
+          confirmButtonColor: "#481e8a",
+          confirmButtonText: "Aceptar"
+        });
+      }
     });
+
+    // Manejo de errores de imagen
+    let imageAttempts = 0;
+    function handleImageError(img) {
+      imageAttempts++;
+      
+      if (imageAttempts === 1) {
+        // Primer intento: imagen por defecto con iniciales
+        const nombre = /*[[${nombre}]]*/ '';
+        const iniciales = nombre ? nombre.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'U';
+        img.src = `https://via.placeholder.com/120x120/481e8a/ffffff?text=${iniciales}`;
+      } else {
+        // Último recurso: imagen por defecto simple
+        img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSIjNDgxZThhIi8+CjxjaXJjbGUgY3g9IjYwIiBjeT0iNDUiIHI9IjIwIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMzAgOTBjMC0xNiAxMy40My0zMCAzMC0zMHMzMCAxNCAzMCAzMCIgZmlsbD0id2hpdGUiLz4KPC9zdmc+';
+      }
+    }
   </script>
 </body>
 

@@ -1,0 +1,194 @@
+/* Estilos para el dashboard */
+
+.dashboard-container {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 100px 20px 60px;
+}
+
+.welcome-section {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.welcome-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.welcome-subtitle {
+    font-size: 1.2rem;
+    color: #5a6c7d;
+    margin-bottom: 2rem;
+    font-weight: 400;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.dashboard-card {
+    background: white;
+    padding: 2.5rem 2rem;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: var(--card-color);
+}
+
+.dashboard-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-card.card-purple {
+    --card-color: linear-gradient(135deg, #481e8a, #5a2ba3);
+}
+
+.dashboard-card.card-blue {
+    --card-color: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.dashboard-card.card-green {
+    --card-color: linear-gradient(135deg, #27ae60, #2ecc71);
+}
+
+.dashboard-card.card-orange {
+    --card-color: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+.dashboard-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2.2rem;
+    color: white;
+}
+
+.dashboard-card.card-purple .dashboard-icon {
+    background: linear-gradient(135deg, #481e8a, #5a2ba3);
+}
+
+.dashboard-card.card-blue .dashboard-icon {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.dashboard-card.card-green .dashboard-icon {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+}
+
+.dashboard-card.card-orange .dashboard-icon {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+.dashboard-title {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.dashboard-description {
+    color: #5a6c7d;
+    line-height: 1.6;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-link {
+    display: inline-block;
+    padding: 12px 24px;
+    background: var(--card-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.dashboard-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.stats-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    margin-bottom: 3rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.stats-title {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1.5rem;
+    background: #f8f9ff;
+    border-radius: 12px;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #481e8a;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #5a6c7d;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .welcome-title {
+        font-size: 2.2rem;
+    }
+    
+    .dashboard-container {
+        padding: 80px 15px 40px;
+    }
+    
+    .dashboard-card {
+        padding: 2rem 1.5rem;
+    }
+} 

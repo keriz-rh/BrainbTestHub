@@ -13,6 +13,10 @@
 <body>
   <div th:replace="fragments/navbar :: navbar"></div>
 
+  <!-- Formas geométricas decorativas -->
+  <div class="geometric-shape shape-1"></div>
+  <div class="geometric-shape shape-2"></div>
+
   <div class="container">
     <div class="title" th:text="${titulo}">Crea un nuevo cuestionario</div>
     <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
@@ -52,11 +56,14 @@
         <input type="hidden" th:field="*{id}" />
 
       </div>
-      <div class="button">
-        <input type="submit" class="btn btn-primary" value="Guardar">
-      </div>
-      <div class="button-cancel">
-        <a th:href="@{/cuestionarios}" class="btn-secondary">Cancelar</a>
+      
+      <div class="button-container">
+        <div class="button">
+          <input type="submit" class="btn btn-primary" value="Guardar">
+        </div>
+        <div class="button-cancel">
+          <a th:href="@{/cuestionarios}" class="btn-secondary">Cancelar</a>
+        </div>
       </div>
     </form>
   </div>

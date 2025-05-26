@@ -41,47 +41,55 @@
     </script>
 </head>
 <body>
-    <div class="registro-container">
-        <h1 th:text="${titulo}">Registro de Usuario</h1>
-        
-        <div th:if="${error}" class="error-message" th:text="${error}">
-            Error en el formulario
-        </div>
-        
-        <form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post">
-            <input type="hidden" th:field="*{id}" />
+    <div th:replace="fragments/navbar :: navbar"></div>
+
+    <!-- Formas geométricas decorativas -->
+    <div class="geometric-shape shape-1"></div>
+    <div class="geometric-shape shape-2"></div>
+
+    <div class="container">
+        <div class="registro-container">
+            <h1 th:text="${titulo}">Registro de Usuario</h1>
             
-            <div class="form-group">
-                <label for="nombre">Nombre de usuario:</label>
-                <input type="text" id="nombre" th:field="*{nombre}" placeholder="Ingrese su nombre" required>
-                <div th:if="${#fields.hasErrors('nombre')}" class="error" th:errors="*{nombre}"></div>
+            <div th:if="${error}" class="error-message" th:text="${error}">
+                Error en el formulario
             </div>
+            
+            <form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post">
+                <input type="hidden" th:field="*{id}" />
+                
+                <div class="form-group">
+                    <label for="nombre">Nombre de usuario:</label>
+                    <input type="text" id="nombre" th:field="*{nombre}" placeholder="Ingrese su nombre" required>
+                    <div th:if="${#fields.hasErrors('nombre')}" class="error" th:errors="*{nombre}"></div>
+                </div>
 
-            <div class="form-group">
-                <label for="correo">Correo:</label>
-                <input type="email" id="correo" th:field="*{correo}" placeholder="Ingrese su correo" required>
-                <div th:if="${#fields.hasErrors('correo')}" class="error" th:errors="*{correo}"></div>
+                <div class="form-group">
+                    <label for="correo">Correo:</label>
+                    <input type="email" id="correo" th:field="*{correo}" placeholder="Ingrese su correo" required>
+                    <div th:if="${#fields.hasErrors('correo')}" class="error" th:errors="*{correo}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="carnet">Carnet:</label>
+                    <input type="text" id="carnet" th:field="*{carnet}" placeholder="Ingrese su carnet">
+                    <div th:if="${#fields.hasErrors('carnet')}" class="error" th:errors="*{carnet}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="contrasena">Contraseña:</label>
+                    <input type="password" id="contrasena" th:field="*{contrasena}" placeholder="Ingrese su contraseña" 
+                           minlength="6" title="La contraseña debe tener al menos 6 caracteres">
+                    <div th:if="${#fields.hasErrors('contrasena')}" class="error" th:errors="*{contrasena}"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">Cancelar</button>
+            </form>
+            
+            <div class="nav-links">
+                <a th:href="@{/login}">¿Ya tienes una cuenta? Inicia sesión aquí</a>
             </div>
-
-            <div class="form-group">
-                <label for="carnet">Carnet:</label>
-                <input type="text" id="carnet" th:field="*{carnet}" placeholder="Ingrese su carnet">
-                <div th:if="${#fields.hasErrors('carnet')}" class="error" th:errors="*{carnet}"></div>
-            </div>
-
-            <div class="form-group">
-                <label for="contrasena">Contraseña:</label>
-                <input type="password" id="contrasena" th:field="*{contrasena}" placeholder="Ingrese su contraseña" 
-                       minlength="6" title="La contraseña debe tener al menos 6 caracteres">
-                <div th:if="${#fields.hasErrors('contrasena')}" class="error" th:errors="*{contrasena}"></div>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">Cancelar</button>
-        </form>
-        
-        <div class="nav-links">
-            <a th:href="@{/login}">¿Ya tienes una cuenta? Inicia sesión aquí</a>
         </div>
     </div>
 </body>
