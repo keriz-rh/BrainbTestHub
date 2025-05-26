@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,49 +7,133 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="/css/index-style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/inicio-style.css">
 </head>
 
 <body>
-    <div th:replace="fragments/navbar :: navbar"></div>
+    <!-- Redirección automática para usuarios autenticados -->
+    <script sec:authorize="isAuthenticated()">
+        window.location.href = '/dashboard';
+    </script>
 
-    <div class="container">
-        <div class="header">
-            <h1 th:text="${mensaje}">¡Bienvenido a BrainTestHub!</h1>
+    <!-- Navbar público específico para usuarios no autenticados -->
+    <nav class="public-navbar" sec:authorize="!isAuthenticated()">
+        <a href="/" class="logo">
+            <i class="fas fa-brain"></i> BrainTestHub
+        </a>
+        <div class="nav-buttons">
+            <a th:href="@{/oauth2/authorization/auth0}" class="public-nav-btn login">
+                Iniciar sesión
+            </a>
+            <a th:href="@{/oauth2/authorization/auth0}" class="public-nav-btn register">
+                Registrarse
+            </a>
         </div>
-
-        <div class="features">
-            <div class="feature">
-                <h3>Cuestionarios Dinámicos</h3>
-                <p>Crea y gestiona cuestionarios personalizados para evaluar el conocimiento de tus estudiantes.</p>
-            </div>
-            <div class="feature">
-                <h3>Resultados en Tiempo Real</h3>
-                <p>Obtén feedback inmediato sobre el rendimiento de los estudiantes.</p>
-            </div>
-            <div class="feature">
-                <h3>Gestión de Usuarios</h3>
-                <p>Administra fácilmente tu usuario en la plataforma.</p>
+        <div class="hamburger" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-nav-buttons">
+                <a th:href="@{/oauth2/authorization/auth0}" class="public-nav-btn login">
+                    Iniciar sesión
+                </a>
+                <a th:href="@{/oauth2/authorization/auth0}" class="public-nav-btn register">
+                    Registrarse gratis
+                </a>
             </div>
         </div>
+    </nav>
 
-        <div class="buttons" sec:authorize="!isAuthenticated()">
-            <a th:href="@{/oauth2/authorization/auth0}" class="btn btn-primary">Iniciar Sesión</a>
-            <a th:href="@{/oauth2/authorization/auth0}" class="btn btn-secondary">Registrarse</a>
+    <!-- Formas geométricas decorativas -->
+    <div class="geometric-shape shape-1"></div>
+    <div class="geometric-shape shape-2"></div>
+
+    <!-- Contenido solo para usuarios NO autenticados -->
+    <div sec:authorize="!isAuthenticated()">
+        <div class="main-container">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">Productividad para Equipos Educativos</h1>
+                <p class="hero-subtitle">BrainTestHub es una plataforma enfocada en un flujo de trabajo natural para crear, gestionar y evaluar cuestionarios educativos.</p>
+            </section>
+
+            <!-- Features Section -->
+            <section class="features-section">
+                <h2 class="features-title">Todo lo que necesitas en una plataforma</h2>
+                
+                <div class="features-grid">
+                    <div class="feature-card card-purple">
+                        <div class="feature-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div class="feature-subtitle">Cuestionarios</div>
+                        <h3 class="feature-title">Gestión de cuestionarios para equipos de proyectos exitosos</h3>
+                        <p class="feature-description">Crea, organiza y gestiona cuestionarios educativos con herramientas intuitivas diseñadas para maximizar la eficiencia del aprendizaje.</p>
+                    </div>
+
+                    <div class="feature-card card-blue">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="feature-subtitle">Análisis</div>
+                        <h3 class="feature-title">Formularios y encuestas</h3>
+                        <p class="feature-description">Obtén insights detallados sobre el rendimiento estudiantil con reportes automáticos y análisis en tiempo real que impulsan la mejora continua.</p>
+                    </div>
+
+                    <div class="feature-card card-green">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="feature-subtitle">Usuarios</div>
+                        <h3 class="feature-title">Gestión + Tareas = Magia</h3>
+                        <p class="feature-description">Administra usuarios, asigna roles y coordina actividades educativas en una plataforma unificada que simplifica la colaboración.</p>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
 
-    <script>
-        function toggleMenu() {
-            const menu = document.querySelector('.menu');
-            menu.classList.toggle('active');
-        }
-    </script>
+    <!-- Mensaje para usuarios autenticados (fallback si JS está deshabilitado) -->
+    <div sec:authorize="isAuthenticated()" class="redirect-message">
+        <h2>Redirigiendo al dashboard...</h2>
+        <p>Si no eres redirigido automáticamente, <a th:href="@{/dashboard}">haz clic aquí</a>.</p>
+    </div>
 
     <script src="/navbar.js"></script>
+    <script>
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            mobileMenu.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
 
+        // Cerrar menú móvil al hacer clic fuera de él
+        document.addEventListener('click', function(event) {
+            const navbar = document.querySelector('.public-navbar');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            if (!navbar.contains(event.target)) {
+                mobileMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+
+        // Cerrar menú móvil al redimensionar la ventana
+        window.addEventListener('resize', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            if (window.innerWidth > 768) {
+                mobileMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>

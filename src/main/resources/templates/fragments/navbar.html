@@ -1,5 +1,190 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <style>
+    .navbar {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      height: 60px !important;
+      box-sizing: border-box !important;
+    }
+
+    .navbar .logo {
+      display: flex !important;
+      align-items: center !important;
+      height: 100% !important;
+    }
+
+    .navbar .menu {
+      display: flex !important;
+      align-items: center !important;
+      height: 100% !important;
+    }
+
+    .navbar .menu ul {
+      display: flex !important;
+      align-items: center !important;
+      list-style: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      height: 100% !important;
+    }
+
+    .navbar .menu ul li {
+      display: flex !important;
+      align-items: center !important;
+      height: 100% !important;
+    }
+
+    .navbar .menu ul li a {
+      display: flex !important;
+      align-items: center !important;
+      height: 40px !important;
+    }
+
+    .navbar .hamburger {
+      display: none !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      height: 40px !important;
+      width: 40px !important;
+    }
+
+    /* Estilos para el popup del perfil */
+    .navbar .profile-dropdown {
+      position: relative !important;
+      display: inline-block !important;
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+    }
+
+    .navbar .profile-dropdown-content {
+      display: none !important;
+      position: absolute !important;
+      right: 0 !important;
+      top: 100% !important;
+      background-color: white !important;
+      min-width: 200px !important;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+      border-radius: 12px !important;
+      z-index: 1001 !important;
+      border: 1px solid rgba(0, 0, 0, 0.1) !important;
+      overflow: hidden !important;
+      margin-top: 8px !important;
+    }
+
+    .navbar .profile-dropdown-content.show {
+      display: block !important;
+      animation: slideDown 0.3s ease !important;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .navbar .profile-dropdown-item {
+      display: flex !important;
+      align-items: center !important;
+      padding: 12px 16px !important;
+      text-decoration: none !important;
+      color: #333 !important;
+      transition: background-color 0.3s ease !important;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+      background-color: transparent !important;
+      /* Estilos adicionales para asegurar visibilidad */
+      font-family: 'Poppins', sans-serif !important;
+      line-height: 1.4 !important;
+      white-space: nowrap !important;
+    }
+
+    .navbar .profile-dropdown-item:last-child {
+      border-bottom: none !important;
+    }
+
+    .navbar .profile-dropdown-item:hover {
+      background-color: #f8f9ff !important;
+      color: #481e8a !important;
+    }
+
+    .navbar .profile-dropdown-item i {
+      margin-right: 12px !important;
+      width: 16px !important;
+      color: #481e8a !important;
+      font-size: 14px !important;
+    }
+
+    .navbar .profile-icon {
+      cursor: pointer !important;
+      padding: 0 !important;
+      border-radius: 50% !important;
+      transition: all 0.3s ease !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 40px !important;
+      height: 40px !important;
+      color: #FFF !important;
+      text-decoration: none !important;
+      background-color: #481e8a !important;
+      box-shadow: 0 2px 8px rgba(72, 30, 138, 0.3) !important;
+      margin: 0 !important;
+      border: none !important;
+      outline: none !important;
+    }
+
+    .navbar .profile-icon:hover {
+      background-color: #5a2ba3 !important;
+      color: #FFF !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 4px 12px rgba(72, 30, 138, 0.4) !important;
+    }
+
+    .navbar .profile-icon i {
+      font-size: 16px !important;
+      line-height: 1 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    /* Pequeña flecha indicadora */
+    .navbar .profile-dropdown-content::before {
+      content: '' !important;
+      position: absolute !important;
+      top: -8px !important;
+      right: 20px !important;
+      width: 0 !important;
+      height: 0 !important;
+      border-left: 8px solid transparent !important;
+      border-right: 8px solid transparent !important;
+      border-bottom: 8px solid white !important;
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .navbar .profile-dropdown-content {
+        right: -10px !important;
+        min-width: 180px !important;
+      }
+      
+      .navbar .profile-dropdown-item {
+        padding: 14px 16px !important;
+        font-size: 15px !important;
+      }
+    }
+  </style>
+</head>
 <body>
   <nav class="navbar" th:fragment="navbar">
     <div class="logo">
@@ -7,11 +192,23 @@
     </div>
     <div class="menu" sec:authorize="isAuthenticated()">
       <ul>
-        <li><a th:href="@{/}">Inicio</a></li>
-        <li><a th:href="@{/cuestionarios/nuevo}">Crear cuestionario</a></li>
+        <li sec:authorize="hasRole('admin')"><a th:href="@{/cuestionarios/nuevo}">Crear cuestionario</a></li>
         <li><a th:href="@{/cuestionarios}">Lista de Cuestionarios</a></li>
-        <li><a th:href="@{/perfil}"><i class="fas fa-user"></i></a></li>
-        <li><a th:href="@{/logout}" class="btn-logout">Cerrar sesión</a></li>
+        <li class="profile-dropdown">
+          <a href="#" class="profile-icon" onclick="toggleProfileDropdown(event)">
+            <i class="fas fa-user"></i>
+          </a>
+          <div class="profile-dropdown-content" id="profileDropdown" style="background-color: white; color: #333; border: 1px solid #ccc;">
+            <a th:href="@{/perfil}" class="profile-dropdown-item" style="color: #333 !important; background-color: transparent !important; text-decoration: none !important;">
+              <i class="fas fa-user-circle" style="color: #481e8a !important;"></i>
+              Mi Perfil
+            </a>
+            <a th:href="@{/logout}" class="profile-dropdown-item" style="color: #333 !important; background-color: transparent !important; text-decoration: none !important;">
+              <i class="fas fa-sign-out-alt" style="color: #481e8a !important;"></i>
+              Cerrar sesión
+            </a>
+          </div>
+        </li>
       </ul>
     </div>
     <div class="hamburger">

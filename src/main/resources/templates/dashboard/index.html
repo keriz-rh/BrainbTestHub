@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - BrainTestHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/cuestionario-style.css">
+    <link rel="stylesheet" href="/dashboard-style.css">
+</head>
+
+<body>
+    <div th:replace="fragments/navbar :: navbar"></div>
+
+    <!-- Formas geométricas decorativas -->
+    <div class="geometric-shape shape-1"></div>
+    <div class="geometric-shape shape-2"></div>
+
+    <div class="dashboard-container">
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <h1 class="welcome-title">¡Bienvenido a tu Dashboard!</h1>
+            <p class="welcome-subtitle">Gestiona tus cuestionarios, reportes y más desde aquí</p>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <h2 class="stats-title">Resumen de actividad</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" th:text="${totalCuestionarios ?: '0'}">0</div>
+                    <div class="stat-label">Cuestionarios Totales</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Cards -->
+        <div class="dashboard-grid">
+            <div class="dashboard-card card-purple" onclick="window.location.href='/cuestionarios'">
+                <div class="dashboard-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <h3 class="dashboard-title">Gestionar Cuestionarios</h3>
+                <p class="dashboard-description">Crea, edita y administra todos tus cuestionarios educativos desde un solo lugar.</p>
+                <a href="/cuestionarios" class="dashboard-link">Ver Cuestionarios</a>
+            </div>
+
+            <div class="dashboard-card card-green" onclick="window.location.href='/perfil'">
+                <div class="dashboard-icon">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h3 class="dashboard-title">Mi Perfil</h3>
+                <p class="dashboard-description">Revisa y actualiza tu información personal y configuraciones de cuenta.</p>
+                <a href="/perfil" class="dashboard-link">Ver Perfil</a>
+            </div>
+
+            <div class="dashboard-card card-orange" onclick="window.location.href='/reportes'">
+                <div class="dashboard-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <h3 class="dashboard-title">Reportes y Análisis</h3>
+                <p class="dashboard-description">Visualiza estadísticas detalladas y reportes de rendimiento.</p>
+                <a href="/reportes" class="dashboard-link">Ver Reportes</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/navbar.js"></script>
+    
+    <script>
+        // Animación de números en las estadísticas
+        function animateNumbers() {
+            const numbers = document.querySelectorAll('.stat-number');
+            numbers.forEach(number => {
+                if (number.textContent.includes('%')) return;
+                
+                const target = parseInt(number.textContent) || 0;
+                let current = 0;
+                const increment = Math.max(1, target / 30);
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    number.textContent = Math.floor(current);
+                }, 50);
+            });
+        }
+
+        // Ejecutar animación cuando la página carga
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(animateNumbers, 500);
+        });
+    </script>
+</body>
+</html> 

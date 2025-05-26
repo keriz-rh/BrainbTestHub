@@ -43,14 +43,27 @@ El proyecto es una aplicación web orientada a la creación, gestión y visualiz
 
 ## Interfaz de Usuario
 
-+ Utiliza HTML y CSS para crear una interfaz agradable y moderna. Incluye un diseño responsivo con menús y tablas adaptables a distintos dispositivos.
++ Diseño responsivo utilizando HTML, CSS y JavaScript moderno
++ Componentes dinámicos que se adaptan según el rol del usuario (ADMIN/USER)
++ Integración con Auth0 para inicio de sesión social y tradicional
++ Dashboard personalizado según permisos del usuario
++ Menús y tablas adaptables a distintos dispositivos
++ Notificaciones en tiempo real para acciones del sistema
++ Temas claros y oscuros para mejor experiencia visual
++ Formularios interactivos con validación en tiempo real
++ Navegación intuitiva con breadcrumbs y menú contextual
 
 ## Tecnologías Utilizadas
 
-+ Frontend: HTML, CSS
++ Frontend: HTML, CSS, JavaScript
 + Backend: Spring Boot
-+ Persistencia: JPA
-+ Seguridad: Spring Security
++ Base de Datos: PostgreSQL (Neon.tech)
++ Autenticación: Auth0
++ Despliegue: Render
++ Control de Versiones: Git/GitHub
++ CI/CD: Render Automático
++ Gestión de Configuración: Variables de Entorno (administradas por render)
++ Seguridad: JWT, OAuth 2.0
 
 ## Estructura del Proyecto
 
@@ -58,11 +71,16 @@ El proyecto es una aplicación web orientada a la creación, gestión y visualiz
 + Repositorios: Acceso a datos mediante JPA para interactuar con la base de datos.
 + Modelos: Representación de entidades como Usuario y Cuestionario.
 + Seguridad: Configuración de autenticación, autorización y cifrado de contraseñas.
++ Middleware: Interceptores para validación de tokens JWT y control de acceso
++ Configuración: Gestión de variables de entorno y configuración de Auth0
++ Servicios: Lógica de negocio y comunicación con Auth0
++ Vistas: Componentes de interfaz adaptados según roles de usuario
++ Scripts de Despliegue: Configuración para CI/CD en Render
 
 ## Integrantes
 
 + Ángel Josué Cortez Zaldaña – CZ23002
-+ Julio César Dávila Peñate – DP21000
++ Julio César Dávila Peñate – DP21008
 + Katya Michelle Asencio Bernal – AB23007
 + Kevin Armando Rivera Henríquez – RH16042
 + Gerson Balmore López Rodríguez – LR20029

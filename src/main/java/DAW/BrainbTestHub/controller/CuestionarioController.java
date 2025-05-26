@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class CuestionarioController {
         return "cuestionarios/lista";
     }
 
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model) {
         model.addAttribute("cuestionario", new Cuestionario());
@@ -35,6 +37,7 @@ public class CuestionarioController {
         return "cuestionarios/formulario";
     }
 
+    @PreAuthorize("hasRole('admin')")
     @PostMapping("/guardar")
     public String guardarCuestionario(@ModelAttribute Cuestionario cuestionario, Model model, RedirectAttributes redirectAttributes) {
         if (cuestionario.getHoraInicio().isAfter(cuestionario.getHoraFin())) {
