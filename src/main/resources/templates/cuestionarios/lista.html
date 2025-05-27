@@ -63,7 +63,7 @@
       </table>
       
       <div class="create-btn-container">
-        <a th:href="@{/cuestionarios/nuevo}" class="btn-secondary">Nuevo Cuestionario</a>
+        <a sec:authorize="hasRole('admin')" th:href="@{/cuestionarios/nuevo}" class="btn-secondary">Nuevo Cuestionario</a>
       </div>      
     </div>
 

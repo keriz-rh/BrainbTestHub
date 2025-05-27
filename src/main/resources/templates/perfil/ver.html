@@ -26,10 +26,7 @@
     <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
     <!-- Foto de perfil -->
-    <img th:src="${foto}" 
-         alt="Foto de perfil" 
-         class="profile-photo"
-         onerror="handleImageError(this)">
+    <img th:src="${foto}" alt="Foto de perfil" class="profile-photo" onerror="handleImageError(this)">
 
     <!-- Nombre -->
     <div class="profile-field">
@@ -46,18 +43,28 @@
     <!-- Rol -->
     <div class="profile-field">
       <h3>Rol</h3>
-      <p class="profile-info" th:text="${#strings.arrayJoin(roles, ', ')}">Rol del usuario</p>
+
+      <!-- Mostrar los roles si existen -->
+      <p class="profile-info" th:if="${#lists.size(roles) > 0}" th:text="${#strings.arrayJoin(roles, ', ')}">
+        Rol del usuario
+      </p>
+
+      <!-- Mostrar mensaje si no hay roles -->
+      <p class="profile-info" th:unless="${#lists.size(roles) > 0}">
+        Sin roles asignados. Espera a que se te asigne un rol.
+      </p>
     </div>
+
   </div>
 
   <script src="/navbar.js"></script>
-  
+
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       // Manejo de notificaciones con SweetAlert2
       const success = /*[[${success}]]*/ null;
       const error = /*[[${error}]]*/ null;
-      
+
       if (success) {
         Swal.fire({
           title: "¡Éxito!",
@@ -67,7 +74,7 @@
           confirmButtonText: "Aceptar"
         });
       }
-      
+
       if (error) {
         Swal.fire({
           title: "Error",
@@ -83,7 +90,7 @@
     let imageAttempts = 0;
     function handleImageError(img) {
       imageAttempts++;
-      
+
       if (imageAttempts === 1) {
         // Primer intento: imagen por defecto con iniciales
         const nombre = /*[[${nombre}]]*/ '';
@@ -97,4 +104,4 @@
   </script>
 </body>
 
-</html> 
+</html>
