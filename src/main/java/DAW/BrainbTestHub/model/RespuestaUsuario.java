@@ -18,8 +18,8 @@ public class RespuestaUsuario {
     @JoinColumn(name = "pregunta_id")
     private Pregunta pregunta;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "respuesta_id")
+    @ManyToOne
+    @JoinColumn(name = "respuesta_id", nullable = true)
     private Respuesta respuestaSeleccionada;
 
     @Column(nullable = false)

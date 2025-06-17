@@ -20,6 +20,7 @@
         <input type="hidden" name="intentoId" th:value="${intento.id}" />
         <input type="hidden" name="preguntaId" th:value="${pregunta.id}" />
         <input type="hidden" name="index" th:value="${index}" />
+        <input type="hidden" name="tiempoAgotado" id="tiempoAgotado">
 
         <fieldset style="margin-bottom: 20px;">
             <legend th:text="${pregunta.enunciado}">Texto de la pregunta</legend>
@@ -33,16 +34,28 @@
         </fieldset>
 
         <button type="submit" th:text="${index + 1 == total ? 'Finalizar intento' : 'Siguiente'}">Siguiente</button>
+
+        <button type="button"
+            onclick="document.getElementById('tiempoAgotado').setAttribute('value','true'); document.getElementById('form-respuesta').submit();">
+            Simular Tiempo Agotado
+        </button>
     </form>
 
     <script>
         window.onload = function () {
             const contenedor = document.getElementById("temporizador");
             let tiempo = parseInt(contenedor.dataset.tiempo);
+            const tiempoInput = document.getElementById("tiempoAgotado");
+            const form = document.getElementById("form-respuesta");
 
             function countdown() {
                 if (tiempo <= 0) {
-                    document.getElementById("form-respuesta").submit();
+                    if (tiempoInput) {
+                        tiempoInput.setAttribute("value", "true"); // Asegura que el valor sí se mande
+                    }
+                    if (form) {
+                        form.submit();
+                    }
                 } else {
                     const min = Math.floor(tiempo / 60);
                     const sec = tiempo % 60;
@@ -55,6 +68,8 @@
 
             countdown();
         };
+
     </script>
 </body>
+
 </html>

@@ -1,0 +1,28 @@
+<h2>Intento ID: <span th:text="${intento.id}"></span></h2>
+<p><strong>Correo:</strong> <span th:text="${intento.correo}"></span></p>
+<p><strong>Nombre:</strong> <span th:text="${intento.nombre}"></span></p>
+<p><strong>Comienzo:</strong> <span th:text="${intento.fechaHoraInicio}"></span></p>
+<p><strong>Finalizó:</strong> <span th:text="${intento.fechaHoraFin} ?: 'En curso'"></span></p>
+<p><strong>Puntaje:</strong> <span th:text="${intento.puntaje} + ' / ' + ${#lists.size(respuestas)}"></span></p>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Pregunta</th>
+            <th>Respuesta seleccionada</th>
+            <th>Correcta</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="respuesta : ${respuestas}">
+            <td th:text="${respuesta.pregunta.enunciado}"></td>
+            <td>
+                <span th:if="${respuesta.respuestaSeleccionada != null}"
+                    th:text="${respuesta.respuestaSeleccionada.texto}"></span>
+                <span th:if="${respuesta.respuestaSeleccionada == null}">No respondida</span>
+            </td>
+            <td th:text="${respuesta.respuestaSeleccionada == null ? '🚫' : (respuesta.esCorrecta ? '✔️' : '❌')}"></td>
+        </tr>
+
+    </tbody>
+</table>

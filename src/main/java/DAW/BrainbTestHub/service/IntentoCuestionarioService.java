@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class IntentoCuestionarioService {
@@ -28,4 +29,9 @@ public class IntentoCuestionarioService {
     public IntentoCuestionario obtenerPorId(Long id) {
         return intentoRepo.findById(id).orElse(null);
     }
+
+    public Optional<IntentoCuestionario> buscarIntentoExistente(Long cuestionarioId, String userId) {
+        return intentoRepo.findByCuestionarioIdAndUserId(cuestionarioId, userId);
+    }
+
 }

@@ -28,6 +28,12 @@ public class IntentoCuestionario {
     @Column
     private Integer puntaje;
 
+    @Column
+    private String correo;
+
+    @Column
+    private String nombre;
+
     @OneToMany(mappedBy = "intento", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RespuestaUsuario> respuestasUsuario;
 
@@ -86,6 +92,22 @@ public class IntentoCuestionario {
 
     public void setRespuestasUsuario(List<RespuestaUsuario> respuestasUsuario) {
         this.respuestasUsuario = respuestasUsuario;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
 }

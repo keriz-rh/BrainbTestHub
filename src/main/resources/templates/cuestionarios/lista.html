@@ -1,128 +1,132 @@
 <!doctype html>
 <html lang="en-US" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title th:text="${titulo}">Lista de Cuestionarios</title>
-    <link rel="stylesheet" href="/cuestionario-style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  </head>
-  <body>
-    <div th:replace="fragments/navbar :: navbar"></div>
 
-    <!-- Formas geométricas decorativas -->
-    <div class="geometric-shape shape-1"></div>
-    <div class="geometric-shape shape-2"></div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title th:text="${titulo}">Lista de Cuestionarios</title>
+  <link rel="stylesheet" href="/cuestionario-style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
 
-    <div class="container">
-      <!-- Título dinámico -->
-      <div class="title" th:text="${titulo}">Lista de Cuestionarios</div>
-      
-      <!-- Notificaciones de éxito y error -->
-      <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-      <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-      
-      <!-- Mensaje si no hay cuestionarios -->
-      <div th:if="${cuestionarios.empty}">
-        <div class="alert alert-info">No hay cuestionarios disponibles</div>
-      </div>
-      
-      <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+<body>
+  <div th:replace="fragments/navbar :: navbar"></div>
 
-      <!-- Tabla de cuestionarios -->
-      <table class="data-table" th:unless="${cuestionarios.empty}">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Título</th>
-            <th>Descripción</th>
-            <th>Fecha</th>
-            <th>Se abre a</th>
-            <th>Se cierra a</th>
-            <th>Duración (m)</th>
-            <th>Usuario</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="cuestionario : ${cuestionarios}">
-            <td th:text="${cuestionario.id}"></td>
-            <td th:text="${cuestionario.titulo}"></td>
-            <td th:text="${cuestionario.descripcion}"></td>
-            <td th:text="${#temporals.format(cuestionario.fecha, 'yyyy-MM-dd')}"></td>
-            <td th:text="${#temporals.format(cuestionario.horaInicio, 'hh:mm a')}"></td>
-            <td th:text="${#temporals.format(cuestionario.horaFin, 'hh:mm a')}"></td>
-            <td th:text="${cuestionario.duracion}"></td>
-            <td th:text="${cuestionario.userId}"></td>
-            <td>
-              <a th:href="@{/cuestionarios/editar/{id}(id=${cuestionario.id})}" class="action-link edit-link">Editar</a>
-              <a href="javascript:void(0);" th:data-id="${cuestionario.id}" class="action-link delete-link eliminar-cuestionario">Eliminar</a>
-              <a th:href="@{/preguntas/{id}(id=${cuestionario.id})}" class="action-link edit-link">Ver Preguntas
-            </td>              
-          </tr>
-        </tbody>
-      </table>
-      
-      <div class="create-btn-container">
-        <a sec:authorize="hasRole('admin')" th:href="@{/cuestionarios/nuevo}" class="btn-secondary">Nuevo Cuestionario</a>
-      </div>      
+  <!-- Formas geométricas decorativas -->
+  <div class="geometric-shape shape-1"></div>
+  <div class="geometric-shape shape-2"></div>
+
+  <div class="container">
+    <!-- Título dinámico -->
+    <div class="title" th:text="${titulo}">Lista de Cuestionarios</div>
+
+    <!-- Notificaciones de éxito y error -->
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <!-- Mensaje si no hay cuestionarios -->
+    <div th:if="${cuestionarios.empty}">
+      <div class="alert alert-info">No hay cuestionarios disponibles</div>
     </div>
 
-    <script src="/navbar.js"></script>
-    
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // Manejo de notificaciones con SweetAlert2
-        const success = /*[[${success}]]*/ null;
-        const error = /*[[${error}]]*/ null;
-        
-        if (success) {
+    <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+
+    <!-- Tabla de cuestionarios -->
+    <table class="data-table" th:unless="${cuestionarios.empty}">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Título</th>
+          <th>Descripción</th>
+          <th>Fecha</th>
+          <th>Se abre a</th>
+          <th>Se cierra a</th>
+          <th>Duración (m)</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="cuestionario : ${cuestionarios}">
+          <td th:text="${cuestionario.id}"></td>
+          <td th:text="${cuestionario.titulo}"></td>
+          <td th:text="${cuestionario.descripcion}"></td>
+          <td th:text="${#temporals.format(cuestionario.fecha, 'yyyy-MM-dd')}"></td>
+          <td th:text="${#temporals.format(cuestionario.horaInicio, 'hh:mm a')}"></td>
+          <td th:text="${#temporals.format(cuestionario.horaFin, 'hh:mm a')}"></td>
+          <td th:text="${cuestionario.duracion}"></td>
+          <td>
+            <a th:href="@{/cuestionarios/editar/{id}(id=${cuestionario.id})}" class="action-link edit-link">Editar</a>
+            <a href="javascript:void(0);" th:data-id="${cuestionario.id}"
+              class="action-link delete-link eliminar-cuestionario">Eliminar</a>
+            <a th:href="@{/preguntas/{id}(id=${cuestionario.id})}" class="action-link edit-link">Ver Preguntas</a>
+            <a th:href="@{/intentos/cuestionario/{id}(id=${cuestionario.id})}" class="action-link edit-link">Ver
+              Intentos</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="create-btn-container">
+      <a sec:authorize="hasRole('admin')" th:href="@{/cuestionarios/nuevo}" class="btn-secondary">Nuevo Cuestionario</a>
+    </div>
+  </div>
+
+  <script src="/navbar.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Manejo de notificaciones con SweetAlert2
+      const success = /*[[${success}]]*/ null;
+      const error = /*[[${error}]]*/ null;
+
+      if (success) {
+        Swal.fire({
+          title: "¡Éxito!",
+          text: success,
+          icon: "success",
+          confirmButtonColor: "#481e8a",
+          confirmButtonText: "Aceptar"
+        });
+      }
+
+      if (error) {
+        Swal.fire({
+          title: "Error",
+          text: error,
+          icon: "error",
+          confirmButtonColor: "#481e8a",
+          confirmButtonText: "Aceptar"
+        });
+      }
+
+      // Manejo de eliminación de cuestionarios
+      const eliminarBtns = document.querySelectorAll('.eliminar-cuestionario');
+
+      eliminarBtns.forEach(btn => {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          const cuestionarioId = this.getAttribute('data-id');
+
           Swal.fire({
-            title: "¡Éxito!",
-            text: success,
-            icon: "success",
-            confirmButtonColor: "#481e8a",
-            confirmButtonText: "Aceptar"
-          });
-        }
-        
-        if (error) {
-          Swal.fire({
-            title: "Error",
-            text: error,
-            icon: "error",
-            confirmButtonColor: "#481e8a",
-            confirmButtonText: "Aceptar"
-          });
-        }
-        
-        // Manejo de eliminación de cuestionarios
-        const eliminarBtns = document.querySelectorAll('.eliminar-cuestionario');
-        
-        eliminarBtns.forEach(btn => {
-          btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const cuestionarioId = this.getAttribute('data-id');
-            
-            Swal.fire({
-              title: "¿Estás seguro?",
-              text: "Esta acción no se puede deshacer y se eliminará el cuestionario permanentemente.",
-              icon: "warning",
-              showCancelButton: true,
-              confirmButtonColor: "#dc3545",
-              cancelButtonColor: "#777777",
-              confirmButtonText: "Sí, eliminar",
-              cancelButtonText: "Cancelar"
-            }).then((result) => {
-              if (result.isConfirmed) {
-                window.location.href = `/cuestionarios/eliminar/${cuestionarioId}`;
-              }
-            });
+            title: "¿Estás seguro?",
+            text: "Esta acción no se puede deshacer y se eliminará el cuestionario permanentemente.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dc3545",
+            cancelButtonColor: "#777777",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = `/cuestionarios/eliminar/${cuestionarioId}`;
+            }
           });
         });
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
+
 </html>

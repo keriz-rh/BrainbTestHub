@@ -24,7 +24,6 @@ public class CuestionarioController {
     @GetMapping
     public String listarCuestionarios(Model model, @AuthenticationPrincipal OidcUser principal) {
         List<Cuestionario> cuestionarios = cuestionarioService.getCuestionariosPorUserId(principal.getSubject());
-        System.out.println("DEBUG - Cuestionarios encontrados: " + cuestionarios.size());
         cuestionarios.forEach(c -> System.out.println(c.getTitulo()));
 
         model.addAttribute("cuestionarios", cuestionarios);
@@ -82,8 +81,17 @@ public class CuestionarioController {
 
     @PreAuthorize("hasRole('admin')")
     @GetMapping("/editar/{id}")
-    public String mostrarFormularioEdicion(@PathVariable Long id, Model model) {
+    public String mostrarFormularioEdicion(@PathVariable Long id, Model model, @AuthenticationPrincipal OidcUser principal, RedirectAttributes redirectAttributes) {
         Cuestionario cuestionario = cuestionarioService.getCuestionarioById(id);
+
+        String userId = principal.getSubject();
+        boolean esPropietario = cuestionario.getUserId().equals(userId);
+
+        if (!esPropietario) {
+            redirectAttributes.addFlashAttribute("error", "No tienes permisos para editar este cuestionario.");
+            return "redirect:/cuestionarios";
+        }
+
         if (cuestionario != null) {
             model.addAttribute("cuestionario", cuestionario);
             model.addAttribute("titulo", "Editar Cuestionario");
@@ -94,7 +102,17 @@ public class CuestionarioController {
 
     @PreAuthorize("hasRole('admin')")
     @GetMapping("/eliminar/{id}")
-    public String eliminarCuestionario(@PathVariable Long id) {
+    public String eliminarCuestionario(@PathVariable Long id, @AuthenticationPrincipal OidcUser principal, RedirectAttributes redirectAttributes) {
+        Cuestionario cuestionario = cuestionarioService.getCuestionarioById(id);
+
+        String userId = principal.getSubject();
+        boolean esPropietario = cuestionario.getUserId().equals(userId);
+
+        if (!esPropietario) {
+            redirectAttributes.addFlashAttribute("error", "No tienes permisos para editar este cuestionario.");
+            return "redirect:/cuestionarios";
+        }
+        
         cuestionarioService.deleteCuestionario(id);
         return "redirect:/cuestionarios";
     }

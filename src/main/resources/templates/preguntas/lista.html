@@ -29,9 +29,9 @@
                     <td th:text="${pregunta.id}"></td>
                     <td th:text="${pregunta.enunciado}"></td>
                     <td>
-                        <a th:href="@{/preguntas/editar/{id}(id=${pregunta.id})}" class="action-link edit-link">✏️ Editar</a>
-                        <a href="javascript:void(0);" th:data-id="${pregunta.id}" class="action-link delete-link eliminar-pregunta">🗑️ Eliminar</a>
-                        <a th:href="@{/respuestas/{id}(id=${pregunta.id})}" class="action-link edit-link">🔍 Ver Respuestas</a>
+                        <a th:href="@{/preguntas/editar/{id}(id=${pregunta.id})}" class="action-link edit-link">Editar</a>
+                        <a href="javascript:void(0);" th:data-id="${pregunta.id}" class="action-link delete-link eliminar-pregunta">Eliminar</a>
+                        <a th:href="@{/respuestas/{id}(id=${pregunta.id})}" class="action-link edit-link">Ver Respuestas</a>
                     </td>
                 </tr>
             </tbody>
