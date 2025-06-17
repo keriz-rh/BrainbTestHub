@@ -1,4 +1,5 @@
 <h2>Intentos del cuestionario: <span th:text="${cuestionario.titulo}">Título</span></h2>
+<a th:href="@{/intentos/descargar/{id}(id=${cuestionario.id})}">Generar reporte (Excel)</a>
 
 <table border="1">
     <thead>

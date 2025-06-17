@@ -1,11 +1,23 @@
 package DAW.BrainbTestHub.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -17,6 +29,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 import DAW.BrainbTestHub.model.Cuestionario;
 import DAW.BrainbTestHub.model.IntentoCuestionario;
@@ -106,9 +122,11 @@ public class IntentoController {
             @RequestParam(required = false) Long respuestaSeleccionadaId,
             @RequestParam int index,
             @RequestParam(required = false) Boolean tiempoAgotado,
-            Model model) {
+            Model model,
+            RedirectAttributes redirectAttributes) {
 
         IntentoCuestionario intento = intentoCuestionarioService.obtenerPorId(intentoId);
+        Cuestionario cuestionario = intento.getCuestionario();
 
         if (Boolean.TRUE.equals(tiempoAgotado)) {
 
@@ -134,7 +152,8 @@ public class IntentoController {
 
             intentoCuestionarioService.guardarIntento(intento);
 
-            return "redirect:/intentos/detalle/" + intentoId;
+            redirectAttributes.addFlashAttribute("mensaje", "Intento guardado");
+            return "redirect:/cuestionarios/resolver?cuestionarioId=" + cuestionario.getId();
         }
 
         Pregunta pregunta = preguntaService.getPreguntaById(preguntaId);
@@ -156,7 +175,8 @@ public class IntentoController {
 
             intentoCuestionarioService.guardarIntento(intento);
 
-            return "redirect:/intentos/detalle/" + intentoId;
+            redirectAttributes.addFlashAttribute("mensaje", "Intento guardado");
+            return "redirect:/cuestionarios/resolver?cuestionarioId=" + cuestionario.getId();
         }
 
         model.addAttribute("pregunta", preguntas.get(siguiente));
@@ -171,8 +191,17 @@ public class IntentoController {
 
     @PreAuthorize("hasRole('admin')")
     @GetMapping("/cuestionario/{id}")
-    public String verIntentosPorCuestionario(@PathVariable Long id, Model model) {
+    public String verIntentosPorCuestionario(@PathVariable Long id, Model model,
+            @AuthenticationPrincipal OidcUser principal, RedirectAttributes redirectAttributes) {
         Cuestionario cuestionario = cuestionarioService.getCuestionarioById(id);
+        String userId = principal.getSubject();
+        boolean esPropietario = cuestionario.getUserId().equals(userId);
+
+        if (!esPropietario) {
+            redirectAttributes.addFlashAttribute("error",
+                    "No tienes permisos para ver los intentos de este cuestionario.");
+            return "redirect:/cuestionarios";
+        }
         List<IntentoCuestionario> intentos = intentoCuestionarioService.obtenerIntentosPorCuestionario(id);
 
         model.addAttribute("cuestionario", cuestionario);
@@ -182,8 +211,19 @@ public class IntentoController {
 
     @PreAuthorize("hasRole('admin')")
     @GetMapping("/detalle/{id}")
-    public String verDetalleIntento(@PathVariable Long id, Model model) {
+    public String verDetalleIntento(@PathVariable Long id, Model model, @AuthenticationPrincipal OidcUser principal,
+            RedirectAttributes redirectAttributes) {
         IntentoCuestionario intento = intentoCuestionarioService.obtenerPorId(id);
+        Cuestionario cuestionario = intento.getCuestionario();
+        String userId = principal.getSubject();
+        boolean esPropietario = cuestionario.getUserId().equals(userId);
+
+        if (!esPropietario) {
+            redirectAttributes.addFlashAttribute("error",
+                    "No tienes permisos para ver los intentos de este cuestionario.");
+            return "redirect:/cuestionarios";
+        }
+
         List<RespuestaUsuario> respuestas = respuestaUsuarioService.obtenerRespuestasPorIntento(id);
 
         model.addAttribute("intento", intento);
@@ -191,4 +231,48 @@ public class IntentoController {
         return "cuestionarios/detalle-intento";
     }
 
+    @PreAuthorize("hasRole('admin')")
+    @GetMapping("/descargar/{id}")
+    public ResponseEntity<Resource> descargarCuestionario(@PathVariable Long id, @AuthenticationPrincipal OidcUser principal) throws IOException {
+        Cuestionario cuestionario = cuestionarioService.getCuestionarioById(id);
+        String userId = principal.getSubject();
+        boolean esPropietario = cuestionario.getUserId().equals(userId);
+
+        if (!esPropietario) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        List<IntentoCuestionario> intentos = intentoCuestionarioService.obtenerIntentosPorCuestionario(id);
+
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet hoja = workbook.createSheet("Intentos");
+
+            Row encabezado = hoja.createRow(0);
+            encabezado.createCell(0).setCellValue("Correo");
+            encabezado.createCell(1).setCellValue("Nombre");
+            encabezado.createCell(2).setCellValue("Inicio");
+            encabezado.createCell(3).setCellValue("Fin");
+            encabezado.createCell(4).setCellValue("Puntaje");
+
+            int filaNum = 1;
+            for (IntentoCuestionario intento : intentos) {
+                Row fila = hoja.createRow(filaNum++);
+                fila.createCell(0).setCellValue(intento.getCorreo());
+                fila.createCell(1).setCellValue(intento.getNombre());
+                fila.createCell(2).setCellValue(intento.getFechaHoraInicio().toString());
+                fila.createCell(3).setCellValue(intento.getFechaHoraFin().toString());
+                fila.createCell(4).setCellValue(intento.getPuntaje());
+            }
+
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            workbook.write(outStream);
+            ByteArrayResource recurso = new ByteArrayResource(outStream.toByteArray());
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"cuestionario_" + id + ".xlsx\"")
+                    .contentType(MediaType
+                            .parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                    .contentLength(recurso.contentLength())
+                    .body(recurso);
+        }
+    }
 }
