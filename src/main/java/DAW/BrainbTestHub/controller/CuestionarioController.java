@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
+import java.time.Duration;
 import java.util.List;
 
 @Controller
@@ -41,28 +42,40 @@ public class CuestionarioController {
 
     @PreAuthorize("hasRole('admin')")
     @PostMapping("/guardar")
-    public String guardarCuestionario(@ModelAttribute Cuestionario cuestionario, Model model,
-            RedirectAttributes redirectAttributes, @AuthenticationPrincipal OidcUser principal) {
-        if (cuestionario.getHoraInicio().isAfter(cuestionario.getHoraFin())) {
+    public String guardarCuestionario(@ModelAttribute Cuestionario form,
+            Model model,
+            RedirectAttributes redirectAttributes,
+            @AuthenticationPrincipal OidcUser principal) {
+        Cuestionario original = (form.getId() != null)
+                ? cuestionarioService.getCuestionarioById(form.getId())
+                : new Cuestionario();
+
+        if (form.getHoraInicio().isAfter(form.getHoraFin())) {
             model.addAttribute("error", "La hora de inicio debe ser antes de la hora de finalización.");
-            model.addAttribute("cuestionario", cuestionario);
-            model.addAttribute("titulo", "Crear Cuestionario");
+            model.addAttribute("cuestionario", form);
+            model.addAttribute("titulo", original.getId() == null ? "Crear Cuestionario" : "Editar Cuestionario");
             return "cuestionarios/formulario";
         }
 
-        long duracionCalculada = java.time.Duration.between(cuestionario.getHoraInicio(), cuestionario.getHoraFin())
-                .toMinutes();
-
-        if (cuestionario.getDuracion() > duracionCalculada || cuestionario.getDuracion() <= 0) {
+        long duracionCalculada = Duration.between(form.getHoraInicio(), form.getHoraFin()).toMinutes();
+        if (form.getDuracion() > duracionCalculada || form.getDuracion() <= 0) {
             model.addAttribute("error",
                     "La duración debe ser mayor a 0 y menor o igual al tiempo entre inicio y finalización.");
-            model.addAttribute("cuestionario", cuestionario);
-            model.addAttribute("titulo", "Crear Cuestionario");
+            model.addAttribute("cuestionario", form);
+            model.addAttribute("titulo", original.getId() == null ? "Crear Cuestionario" : "Editar Cuestionario");
             return "cuestionarios/formulario";
         }
 
-        cuestionario.setUserId(principal.getSubject());
-        cuestionarioService.saveCuestionario(cuestionario);
+        // Solo se actualizan estos campos
+        original.setTitulo(form.getTitulo());
+        original.setDescripcion(form.getDescripcion());
+        original.setFecha(form.getFecha());
+        original.setHoraInicio(form.getHoraInicio());
+        original.setHoraFin(form.getHoraFin());
+        original.setDuracion(form.getDuracion());
+        original.setUserId(principal.getSubject());
+
+        cuestionarioService.saveCuestionario(original);
         redirectAttributes.addFlashAttribute("mensaje", "El cuestionario se ha guardado correctamente");
         return "redirect:/cuestionarios";
     }

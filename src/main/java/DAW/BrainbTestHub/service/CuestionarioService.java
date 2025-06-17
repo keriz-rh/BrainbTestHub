@@ -58,11 +58,16 @@ public class CuestionarioService {
     }
 
     public long calcularTiempoDisponible(Cuestionario cuestionario, LocalDateTime ahora) {
-        LocalDateTime fin = LocalDateTime.of(cuestionario.getFecha(), cuestionario.getHoraFin());
-        long tiempoTotal = cuestionario.getDuracion(); // en minutos
-        long restanteHastaFin = Duration.between(ahora, fin).toMinutes();
+        LocalDateTime horaFin = LocalDateTime.of(cuestionario.getFecha(), cuestionario.getHoraFin());
+        long segundosHastaFin = Duration.between(ahora, horaFin).getSeconds();
+        long duracionEnSegundos = cuestionario.getDuracion() * 60;
 
-        return Math.max(0, Math.min(tiempoTotal, restanteHastaFin));
+        if (segundosHastaFin <= 0) {
+            return 0;
+        }
+
+        long resultado = Math.min(duracionEnSegundos, segundosHastaFin);
+        return resultado;
     }
 
 }

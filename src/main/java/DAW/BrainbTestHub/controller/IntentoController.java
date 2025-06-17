@@ -1,9 +1,7 @@
 package DAW.BrainbTestHub.controller;
-//https://copilot.microsoft.com/chats/djsCg5NsVnCtCZpvJEjTz
+
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,11 +16,11 @@ import DAW.BrainbTestHub.model.Cuestionario;
 import DAW.BrainbTestHub.model.IntentoCuestionario;
 import DAW.BrainbTestHub.model.Pregunta;
 import DAW.BrainbTestHub.model.Respuesta;
-import DAW.BrainbTestHub.model.RespuestaUsuario;
 import DAW.BrainbTestHub.service.CuestionarioService;
 import DAW.BrainbTestHub.service.IntentoCuestionarioService;
 import DAW.BrainbTestHub.service.PreguntaService;
 import DAW.BrainbTestHub.service.RespuestaService;
+import DAW.BrainbTestHub.service.RespuestaUsuarioService;
 
 @Controller
 @RequestMapping("/intentos")
@@ -39,6 +37,9 @@ public class IntentoController {
 
     @Autowired
     private PreguntaService preguntaService;
+
+    @Autowired
+    private RespuestaUsuarioService respuestaUsuarioService;
 
     @PostMapping("/resolver/iniciar")
     public String iniciarIntento(@RequestParam("cuestionarioId") Long cuestionarioId,
@@ -57,47 +58,43 @@ public class IntentoController {
 
         intento = intentoCuestionarioService.guardarIntento(intento);
 
-        List<Pregunta> preguntas = cuestionario.getPreguntas();
-        preguntas.size(); // fuerza la carga si es LAZY
-        model.addAttribute("preguntas", preguntas);
+        List<Pregunta> preguntas = preguntaService.obtenerPreguntasPorCuestionario(cuestionarioId);
 
+        model.addAttribute("preguntas", preguntas);
         model.addAttribute("intento", intento);
-        model.addAttribute("preguntas", cuestionario.getPreguntas());
-        model.addAttribute("tiempoDisponible", tiempoDisponible); // en minutos
+        model.addAttribute("tiempoDisponible", tiempoDisponible); // en segundos
         return "intentos/intento";
     }
 
-    @PostMapping("/resolver/enviar")
-    public String guardarRespuestas(@RequestParam("intentoId") Long intentoId,
-            @RequestParam Map<String, String> respuestasMarcadas) {
+    @PostMapping("/resolver/guardar")
+    public String guardarRespuesta(@RequestParam Long intentoId,
+            @RequestParam Long preguntaId,
+            @RequestParam Long respuestaSeleccionadaId,
+            @RequestParam int index,
+            Model model) {
 
         IntentoCuestionario intento = intentoCuestionarioService.obtenerPorId(intentoId);
-        List<RespuestaUsuario> respuestas = new ArrayList<>();
+        Pregunta pregunta = preguntaService.getPreguntaById(preguntaId);
+        Respuesta respuesta = respuestaService.getRespuestaById(respuestaSeleccionadaId);
 
-        for (Map.Entry<String, String> entrada : respuestasMarcadas.entrySet()) {
-            if (entrada.getKey().startsWith("respuestas[")) {
-                Long idPregunta = Long.valueOf(entrada.getKey().replace("respuestas[", "").replace("]", ""));
-                Long idRespuesta = Long.valueOf(entrada.getValue());
+        respuestaUsuarioService.guardarRespuesta(intento, pregunta, respuesta);
 
-                Pregunta pregunta = preguntaService.getPreguntaById(idPregunta);
-                Respuesta respuesta = respuestaService.getRespuestaById(idRespuesta);
+        List<Pregunta> preguntas = preguntaService.obtenerPreguntasPorCuestionario(intento.getCuestionario().getId());
+        int siguiente = index + 1;
 
-                boolean correcta = respuesta.isEsCorrecta();
-
-                RespuestaUsuario ru = new RespuestaUsuario();
-                ru.setIntento(intento);
-                ru.setPregunta(pregunta);
-                ru.setRespuestaSeleccionada(respuesta);
-                ru.setEsCorrecta(correcta);
-
-                respuestas.add(ru);
-            }
+        if (siguiente >= preguntas.size()) {
+            intento.setFechaHoraFin(LocalDateTime.now());
+            intentoCuestionarioService.guardarIntento(intento); // marca como finalizado
+            return "redirect:/intentos/resumen?intentoId=" + intentoId;
         }
 
-        intento.setFechaHoraFin(LocalDateTime.now());
-        intento.setRespuestasUsuario(respuestas);
-        intentoCuestionarioService.guardarIntento(intento); // guarda también las respuestas
+        model.addAttribute("pregunta", preguntas.get(siguiente));
+        model.addAttribute("index", siguiente);
+        model.addAttribute("total", preguntas.size());
+        model.addAttribute("intento", intento);
+        model.addAttribute("tiempoDisponible",
+                cuestionarioService.calcularTiempoDisponible(intento.getCuestionario(), LocalDateTime.now()));
 
-        return "redirect:/resolver/finalizado?id=" + intento.getId();
+        return "intentos/intento";
     }
 }

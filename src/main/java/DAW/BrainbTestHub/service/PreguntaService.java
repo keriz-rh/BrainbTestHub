@@ -3,6 +3,7 @@ package DAW.BrainbTestHub.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 
 import DAW.BrainbTestHub.model.Cuestionario;
@@ -35,6 +36,7 @@ public class PreguntaService {
         preguntaRepository.deleteById(id);
     }
 
+    @EntityGraph(attributePaths = {"respuestas"})
     public List<Pregunta> obtenerPreguntasPorCuestionario(Long cuestionarioId) {
         Cuestionario cuestionario = cuestionarioRepository.findById(cuestionarioId).orElse(null);
         return (cuestionario != null) ? preguntaRepository.findByCuestionario(cuestionario) : List.of();
