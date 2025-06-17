@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.List;
 
@@ -19,8 +21,8 @@ public class CuestionarioController {
     private CuestionarioService cuestionarioService;
 
     @GetMapping
-    public String listarCuestionarios(Model model) {
-        List<Cuestionario> cuestionarios = cuestionarioService.getAllCuestionarios();
+    public String listarCuestionarios(Model model, @AuthenticationPrincipal OidcUser principal) {
+        List<Cuestionario> cuestionarios = cuestionarioService.getCuestionariosPorUserId(principal.getSubject());
         System.out.println("DEBUG - Cuestionarios encontrados: " + cuestionarios.size());
         cuestionarios.forEach(c -> System.out.println(c.getTitulo()));
 
@@ -39,7 +41,8 @@ public class CuestionarioController {
 
     @PreAuthorize("hasRole('admin')")
     @PostMapping("/guardar")
-    public String guardarCuestionario(@ModelAttribute Cuestionario cuestionario, Model model, RedirectAttributes redirectAttributes) {
+    public String guardarCuestionario(@ModelAttribute Cuestionario cuestionario, Model model,
+            RedirectAttributes redirectAttributes, @AuthenticationPrincipal OidcUser principal) {
         if (cuestionario.getHoraInicio().isAfter(cuestionario.getHoraFin())) {
             model.addAttribute("error", "La hora de inicio debe ser antes de la hora de finalización.");
             model.addAttribute("cuestionario", cuestionario);
@@ -58,11 +61,13 @@ public class CuestionarioController {
             return "cuestionarios/formulario";
         }
 
+        cuestionario.setUserId(principal.getSubject());
         cuestionarioService.saveCuestionario(cuestionario);
         redirectAttributes.addFlashAttribute("mensaje", "El cuestionario se ha guardado correctamente");
         return "redirect:/cuestionarios";
     }
 
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEdicion(@PathVariable Long id, Model model) {
         Cuestionario cuestionario = cuestionarioService.getCuestionarioById(id);
@@ -74,9 +79,33 @@ public class CuestionarioController {
         return "redirect:/cuestionarios";
     }
 
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/eliminar/{id}")
     public String eliminarCuestionario(@PathVariable Long id) {
         cuestionarioService.deleteCuestionario(id);
         return "redirect:/cuestionarios";
     }
+
+    @GetMapping("/elegir")
+    public String mostrarFormularioEleccion() {
+        return "cuestionarios/resolver"; // Vista con el campo para ingresar el ID
+    }
+
+    @GetMapping("/resolver")
+    public String mostrarCuestionario(@RequestParam("cuestionarioId") Long id,
+            Model model) {
+        Cuestionario cuestionario = cuestionarioService.getCuestionarioById(id);
+
+        if (cuestionario == null) {
+            model.addAttribute("error", "No se encontró ningún cuestionario con ese ID.");
+            return "cuestionarios/resolver";
+        }
+
+        boolean estaDisponible = cuestionarioService.estaDisponibleParaResolver(cuestionario);
+        model.addAttribute("cuestionario", cuestionario);
+        model.addAttribute("estaDisponible", estaDisponible);
+
+        return "cuestionarios/informacion";
+    }
+
 }

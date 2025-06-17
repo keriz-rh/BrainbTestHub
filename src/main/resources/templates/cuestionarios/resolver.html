@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Resolver Cuestionario</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h2>Resolver un Cuestionario</h2>
+    <form th:action="@{/cuestionarios/resolver}" method="get">
+        <label for="cuestionarioId">Ingresa el ID del cuestionario que deseas resolver:</label><br>
+        <input type="number" id="cuestionarioId" name="cuestionarioId" required>
+        <br><br>
+        <button type="submit">Aceptar</button>
+    </form>
+</body>
+</html>

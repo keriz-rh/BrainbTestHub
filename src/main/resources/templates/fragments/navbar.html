@@ -193,7 +193,8 @@
     <div class="menu" sec:authorize="isAuthenticated()">
       <ul>
         <li sec:authorize="hasRole('admin')"><a th:href="@{/cuestionarios/nuevo}">Crear cuestionario</a></li>
-        <li><a th:href="@{/cuestionarios}">Lista de Cuestionarios</a></li>
+        <li sec:authorize="hasRole('admin')"><a th:href="@{/cuestionarios}">Lista de Cuestionarios</a></li>
+        <li><a th:href="@{/cuestionarios/elegir}">Resolver Cuestionario</a></li>
         <li class="profile-dropdown">
           <a href="#" class="profile-icon" onclick="toggleProfileDropdown(event)">
             <i class="fas fa-user"></i>

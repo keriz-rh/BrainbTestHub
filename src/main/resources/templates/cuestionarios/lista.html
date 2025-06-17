@@ -39,9 +39,10 @@
             <th>Título</th>
             <th>Descripción</th>
             <th>Fecha</th>
-            <th>Hora de inicio</th>
-            <th>Hora de fin</th>
+            <th>Se abre a</th>
+            <th>Se cierra a</th>
             <th>Duración (m)</th>
+            <th>Usuario</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -54,9 +55,11 @@
             <td th:text="${#temporals.format(cuestionario.horaInicio, 'hh:mm a')}"></td>
             <td th:text="${#temporals.format(cuestionario.horaFin, 'hh:mm a')}"></td>
             <td th:text="${cuestionario.duracion}"></td>
+            <td th:text="${cuestionario.userId}"></td>
             <td>
               <a th:href="@{/cuestionarios/editar/{id}(id=${cuestionario.id})}" class="action-link edit-link">Editar</a>
               <a href="javascript:void(0);" th:data-id="${cuestionario.id}" class="action-link delete-link eliminar-cuestionario">Eliminar</a>
+              <a th:href="@{/preguntas/{id}(id=${cuestionario.id})}" class="action-link edit-link">Ver Preguntas
             </td>              
           </tr>
         </tbody>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title th:text="${titulo}">Preguntas del Cuestionario</title>
+    <link rel="stylesheet" href="/cuestionario-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        <h2 th:text="${titulo}">Preguntas del Cuestionario</h2>
+
+        <div th:if="${preguntas.empty}">
+            <div class="alert alert-info">No hay preguntas en este cuestionario</div>
+        </div>
+
+        <table class="data-table" th:unless="${preguntas.empty}">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Enunciado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pregunta : ${preguntas}">
+                    <td th:text="${pregunta.id}"></td>
+                    <td th:text="${pregunta.enunciado}"></td>
+                    <td>
+                        <a th:href="@{/preguntas/editar/{id}(id=${pregunta.id})}" class="action-link edit-link">✏️ Editar</a>
+                        <a href="javascript:void(0);" th:data-id="${pregunta.id}" class="action-link delete-link eliminar-pregunta">🗑️ Eliminar</a>
+                        <a th:href="@{/respuestas/{id}(id=${pregunta.id})}" class="action-link edit-link">🔍 Ver Respuestas</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="create-btn-container">
+            <a th:href="@{/preguntas/nueva/{id}(id=${cuestionario.id})}" class="btn-secondary">➕ Agregar Pregunta</a>
+            <a th:href="@{/cuestionarios}" class="btn-secondary">↩️ Volver a Cuestionarios</a>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const eliminarBtns = document.querySelectorAll('.eliminar-pregunta');
+
+        eliminarBtns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const preguntaId = this.getAttribute('data-id');
+
+                Swal.fire({
+                    title: "¿Estás seguro?",
+                    text: "Esta acción no se puede deshacer y se eliminará la pregunta permanentemente.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#dc3545",
+                    cancelButtonColor: "#777777",
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "Cancelar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = `/preguntas/eliminar/${preguntaId}`;
+                    }
+                });
+            });
+        });
+    });
+</script>
+</body>
+</html>

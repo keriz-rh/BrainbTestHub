@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Información del Cuestionario</title>
+</head>
+<body>
+    <h2 th:text="${cuestionario.titulo}">Título del cuestionario</h2>
+
+    <p><strong>Descripción:</strong> <span th:text="${cuestionario.descripcion}">...</span></p>
+    <p><strong>Fecha:</strong> <span th:text="${cuestionario.fecha}">...</span></p>
+    <p><strong>Hora de inicio:</strong> <span th:text="${cuestionario.horaInicio}">...</span></p>
+    <p><strong>Hora de fin:</strong> <span th:text="${cuestionario.horaFin}">...</span></p>
+    <p><strong>Duración:</strong> <span th:text="${cuestionario.duracion}">...</span> minutos</p>
+
+    <div th:if="${estaDisponible}">
+        <form th:action="@{/intentos/resolver/iniciar}" method="post">
+            <input type="hidden" name="cuestionarioId" th:value="${cuestionario.id}" />
+            <button type="submit">Comenzar Intento</button>
+        </form>
+    </div>
+
+    <div th:unless="${estaDisponible}">
+        <p style="color: crimson; font-weight: bold;">
+            Este cuestionario no está disponible para resolver en este momento.
+        </p>
+    </div>
+
+    <br><a href="/dashboard">Volver</a>
+</body>
+</html>

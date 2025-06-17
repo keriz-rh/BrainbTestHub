@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title th:text="${titulo}">Editar Pregunta</title>
+    <link rel="stylesheet" href="/cuestionario-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        <h2 th:text="${titulo}">Editar Pregunta</h2>
+
+        <form th:action="@{/preguntas/guardar}" method="post">
+            <input type="hidden" name="id" th:value="${pregunta.id}" />
+            <input type="hidden" name="cuestionarioId" th:value="${pregunta.cuestionario.id}" />
+
+            <label for="enunciado">Enunciado de la pregunta:</label>
+            <input type="text" id="enunciado" name="enunciado" th:value="${pregunta.enunciado}" required />
+
+            <h3>Respuestas</h3>
+            <div id="respuestas-container">
+                <div th:each="respuesta, iterStat : ${respuestas}" class="respuesta">
+                    <input type="hidden" name="respuestaIds" th:value="${respuesta.id}" />
+                    <input type="text" name="textos" th:value="${respuesta.texto}" required />
+                    <input type="radio" name="correctaIndex" th:value="${iterStat.index}" th:checked="${respuesta.esCorrecta}" required /> Correcta
+                    <button type="button" class="eliminar-respuesta" th:data-id="${respuesta.id}">🗑️ Eliminar</button>
+                </div>
+            </div>
+
+            <button type="button" id="agregar-respuesta">➕ Agregar Respuesta</button>
+
+            <button type="submit">Guardar Cambios</button>
+        </form>
+
+        <div class="create-btn-container">
+            <a th:href="@{/preguntas/{id}(id=${pregunta.cuestionario.id})}" class="btn-secondary">↩️ Volver a Preguntas</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const respuestasContainer = document.getElementById('respuestas-container');
+            const agregarBtn = document.getElementById('agregar-respuesta');
+
+            let respuestaIndex = document.querySelectorAll('.respuesta').length;
+
+            // Agregar nueva respuesta
+            agregarBtn.addEventListener('click', function() {
+                const nuevaRespuesta = document.createElement('div');
+                nuevaRespuesta.classList.add('respuesta');
+                nuevaRespuesta.innerHTML = `
+                    <input type="text" name="textos" placeholder="Texto de la respuesta" required />
+                    <input type="radio" name="correctaIndex" value="${respuestaIndex}" required /> Correcta
+                    <button type="button" class="quitar-respuesta">❌ Quitar</button>
+                `;
+                respuestasContainer.appendChild(nuevaRespuesta);
+                respuestaIndex++;
+            });
+
+            // Quitar respuestas nuevas (solo de la interfaz)
+            document.addEventListener('click', function(event) {
+                if (event.target.classList.contains('quitar-respuesta')) {
+                    event.target.parentElement.remove();
+                }
+            });
+
+            // Eliminar respuestas existentes (de la base de datos)
+            document.querySelectorAll('.eliminar-respuesta').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const respuestaId = this.getAttribute('data-id');
+
+                    Swal.fire({
+                        title: "¿Estás seguro?",
+                        text: "Esta acción no se puede deshacer y se eliminará la respuesta permanentemente.",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#dc3545",
+                        cancelButtonColor: "#777777",
+                        confirmButtonText: "Sí, eliminar",
+                        cancelButtonText: "Cancelar"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = `/respuestas/eliminar/${respuestaId}`;
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

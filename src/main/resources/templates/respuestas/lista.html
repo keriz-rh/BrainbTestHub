@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title th:text="${titulo}">Respuestas de la Pregunta</title>
+    <link rel="stylesheet" href="/cuestionario-style.css">
+</head>
+<body>
+    <div class="container">
+        <h2 th:text="${titulo}">Respuestas de la Pregunta</h2>
+
+        <p th:text="'Pregunta: ' + ${pregunta.enunciado}"></p>
+
+        <div th:if="${respuestas.empty}">
+            <div class="alert alert-info">No hay respuestas para esta pregunta</div>
+        </div>
+
+        <table class="data-table" th:unless="${respuestas.empty}">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Texto</th>
+                    <th>Correcta</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="respuesta : ${respuestas}">
+                    <td th:text="${respuesta.id}"></td>
+                    <td th:text="${respuesta.texto}"></td>
+                    <td th:text="${respuesta.esCorrecta ? '✅ Sí' : '❌ No'}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="create-btn-container">
+            <a th:href="@{/preguntas/{id}(id=${pregunta.cuestionario.id})}" class="btn-secondary">Volver a Preguntas</a>
+        </div>
+    </div>
+</body>
+</html>

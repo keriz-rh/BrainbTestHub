@@ -2,6 +2,8 @@ package DAW.BrainbTestHub.controller;
 
 import DAW.BrainbTestHub.service.CuestionarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +21,10 @@ public class HomeController {
     }
     
     @GetMapping("/dashboard")
-    public String dashboard(Model model) {
+    public String dashboard(Model model, @AuthenticationPrincipal OidcUser principal) {
         try {
             // Obtener estadísticas básicas
-            long totalCuestionarios = cuestionarioService.getAllCuestionarios().size();
+            long totalCuestionarios = cuestionarioService.getCuestionariosPorUserId(principal.getSubject()).size();
             
             model.addAttribute("totalCuestionarios", totalCuestionarios);
             

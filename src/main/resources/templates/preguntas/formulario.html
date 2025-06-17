@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title th:text="${titulo}">Agregar Pregunta y Respuestas</title>
+    <link rel="stylesheet" href="/cuestionario-style.css">
+</head>
+<body>
+    <div class="container">
+        <h2 th:text="${titulo}">Agregar Pregunta y Respuestas</h2>
+
+        <form th:action="@{/preguntas/guardar}" method="post">
+            <input type="hidden" name="cuestionarioId" th:value="${cuestionario.id}" />
+
+            <label for="enunciado">Enunciado de la pregunta:</label>
+            <input type="text" id="enunciado" name="enunciado" required />
+
+            <h3>Respuestas</h3>
+            <div id="respuestas-container">
+                <div class="respuesta">
+                    <input type="text" name="textos" placeholder="Texto de la respuesta" required />
+                    <input type="radio" name="correctaIndex" value="0" required /> Correcta
+                    <button type="button" class="quitar-respuesta">❌ Quitar</button>
+                </div>
+            </div>
+
+            <button type="button" id="agregar-respuesta">➕ Agregar Respuesta</button>
+
+            <button type="submit">Guardar Pregunta y Respuestas</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const respuestasContainer = document.getElementById('respuestas-container');
+            const agregarBtn = document.getElementById('agregar-respuesta');
+
+            let respuestaIndex = 1;
+
+            // Agregar nueva respuesta
+            agregarBtn.addEventListener('click', function() {
+                const nuevaRespuesta = document.createElement('div');
+                nuevaRespuesta.classList.add('respuesta');
+                nuevaRespuesta.innerHTML = `
+                    <input type="text" name="textos" placeholder="Texto de la respuesta" required />
+                    <input type="radio" name="correctaIndex" value="${respuestaIndex}" required /> Correcta
+                    <button type="button" class="quitar-respuesta">❌ Quitar</button>
+                `;
+                respuestasContainer.appendChild(nuevaRespuesta);
+                respuestaIndex++;
+            });
+
+            // Quitar respuestas nuevas (solo de la interfaz)
+            document.addEventListener('click', function(event) {
+                if (event.target.classList.contains('quitar-respuesta')) {
+                    event.target.parentElement.remove();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

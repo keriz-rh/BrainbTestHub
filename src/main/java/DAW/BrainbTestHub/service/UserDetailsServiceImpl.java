@@ -9,7 +9,6 @@ import DAW.BrainbTestHub.model.SecurityUser;
 import DAW.BrainbTestHub.model.Usuario;
 import DAW.BrainbTestHub.repository.UsuarioRepository;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @AllArgsConstructor
 @Service

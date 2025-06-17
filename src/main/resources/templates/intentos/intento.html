@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Resolver Cuestionario</title>
+    <meta charset="UTF-8">
+    <script>
+        let tiempo = /*[[${tiempoDisponible}]]*/ 15 * 60;
+        function countdown() {
+            if (tiempo <= 0) {
+                document.getElementById("form-respuestas").submit();
+            } else {
+                let min = Math.floor(tiempo / 60);
+                let sec = tiempo % 60;
+                document.getElementById("timer").innerText = min + ":" + (sec < 10 ? "0" : "") + sec;
+                tiempo--;
+                setTimeout(countdown, 1000);
+            }
+        }
+        window.onload = countdown;
+    </script>
+</head>
+<body>
+<h2>Resolviendo: <span th:text="${intento.cuestionario.titulo}"></span></h2>
+<p>Tiempo restante: <span id="timer"></span></p>
+
+<form th:action="@{/intentos/resolver/enviar}" method="post" id="form-respuestas">
+    <input type="hidden" name="intentoId" th:value="${intento.id}" />
+    
+    <div th:each="pregunta : ${preguntas}">
+        <fieldset>
+            <legend th:text="${pregunta.enunciado}"></legend>
+
+            <div th:each="respuesta : ${pregunta.respuestas}">
+                <label>
+                    <input type="radio"
+                           th:name="${'respuestas[' + pregunta.id + ']'}"
+                           th:value="${respuesta.id}" />
+                    <span th:text="${respuesta.texto}"></span>
+                </label><br/>
+            </div>
+        </fieldset>
+    </div>
+    
+    <button type="submit">Terminar intento</button>
+</form>
+</body>
+</html>
