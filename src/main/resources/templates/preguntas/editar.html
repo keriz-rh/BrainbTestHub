@@ -1,70 +1,155 @@
 <!doctype html>
-<html lang="en-US" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
     <title th:text="${titulo}">Editar Pregunta</title>
     <link rel="stylesheet" href="/cuestionario-style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/preguntas-formulario.css">
+    <link rel="stylesheet" href="/navbar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            padding-top: 70px; /* Espacio para el navbar fijo */
+        }
+    </style>
 </head>
 <body>
+    <div th:replace="fragments/navbar :: navbar"></div>
+    
     <div class="container">
-        <h2 th:text="${titulo}">Editar Pregunta</h2>
-
-        <form th:action="@{/preguntas/guardar}" method="post">
-            <input type="hidden" name="id" th:value="${pregunta.id}" />
-            <input type="hidden" name="cuestionarioId" th:value="${pregunta.cuestionario.id}" />
-
-            <label for="enunciado">Enunciado de la pregunta:</label>
-            <input type="text" id="enunciado" name="enunciado" th:value="${pregunta.enunciado}" required />
-
-            <h3>Respuestas</h3>
-            <div id="respuestas-container">
-                <div th:each="respuesta, iterStat : ${respuestas}" class="respuesta">
-                    <input type="hidden" name="respuestaIds" th:value="${respuesta.id}" />
-                    <input type="text" name="textos" th:value="${respuesta.texto}" required />
-                    <input type="radio" name="correctaIndex" th:value="${iterStat.index}" th:checked="${respuesta.esCorrecta}" required /> Correcta
-                    <button type="button" class="eliminar-respuesta" th:data-id="${respuesta.id}">🗑️ Eliminar</button>
-                </div>
+        <div class="pregunta-form-container">
+            <div class="form-header">
+                <h2 th:text="${titulo}">Editar Pregunta</h2>
+                <p class="subtitle">Modifica la pregunta y sus opciones de respuesta</p>
             </div>
 
-            <button type="button" id="agregar-respuesta">➕ Agregar Respuesta</button>
+            <form th:action="@{/preguntas/guardar}" method="post">
+                <input type="hidden" name="id" th:value="${pregunta.id}" />
+                <input type="hidden" name="cuestionarioId" th:value="${pregunta.cuestionario.id}" />
 
-            <button type="submit">Guardar Cambios</button>
-        </form>
+                <div class="pregunta-section">
+                    <h3>
+                        <i class="fas fa-question-circle"></i>
+                        Pregunta
+                    </h3>
+                    <div class="pregunta-input-group">
+                        <label for="enunciado">Enunciado de la pregunta:</label>
+                        <textarea id="enunciado" name="enunciado" th:text="${pregunta.enunciado}" placeholder="Escribe aquí tu pregunta..." required></textarea>
+                    </div>
+                </div>
 
-        <div class="create-btn-container">
-            <a th:href="@{/preguntas/{id}(id=${pregunta.cuestionario.id})}" class="btn-secondary">↩️ Volver a Preguntas</a>
+                <div class="respuestas-section">
+                    <h3>
+                        <i class="fas fa-list-check"></i>
+                        Opciones de Respuesta
+                    </h3>
+                    <div id="respuestas-container">
+                        <div th:each="respuesta, iterStat : ${respuestas}" class="respuesta-item">
+                            <div class="respuesta-counter" th:text="${iterStat.index + 1}">1</div>
+                            <div class="respuesta-content">
+                                <input type="hidden" name="respuestaIds" th:value="${respuesta.id}" />
+                                <input type="text" name="textos" th:value="${respuesta.texto}" th:placeholder="'Opción ' + (${iterStat.index + 1})" required />
+                                <div class="respuesta-radio">
+                                    <input type="radio" th:id="'correcta' + ${iterStat.index}" name="correctaIndex" th:value="${iterStat.index}" th:checked="${respuesta.esCorrecta}" required />
+                                    <label th:for="'correcta' + ${iterStat.index}">
+                                        <i class="fas fa-check"></i>
+                                        Respuesta correcta
+                                    </label>
+                                </div>
+                                <button type="button" class="btn-remove-respuesta eliminar-respuesta" th:data-id="${respuesta.id}">
+                                    <i class="fas fa-trash"></i>
+                                    Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-add-respuesta" id="agregar-respuesta">
+                        <i class="fas fa-plus"></i>
+                        Agregar Nueva Opción
+                    </button>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        Guardar Cambios
+                    </button>
+                    <a th:href="@{/preguntas/{id}(id=${pregunta.cuestionario.id})}" class="btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Volver a Preguntas
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 
+    <script src="/navbar.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const respuestasContainer = document.getElementById('respuestas-container');
             const agregarBtn = document.getElementById('agregar-respuesta');
 
-            let respuestaIndex = document.querySelectorAll('.respuesta').length;
+            let respuestaIndex = document.querySelectorAll('.respuesta-item').length;
 
             // Agregar nueva respuesta
             agregarBtn.addEventListener('click', function() {
                 const nuevaRespuesta = document.createElement('div');
-                nuevaRespuesta.classList.add('respuesta');
+                nuevaRespuesta.classList.add('respuesta-item');
                 nuevaRespuesta.innerHTML = `
-                    <input type="text" name="textos" placeholder="Texto de la respuesta" required />
-                    <input type="radio" name="correctaIndex" value="${respuestaIndex}" required /> Correcta
-                    <button type="button" class="quitar-respuesta">❌ Quitar</button>
+                    <div class="respuesta-counter">${respuestaIndex + 1}</div>
+                    <div class="respuesta-content">
+                        <input type="text" name="textos" placeholder="Escribe otra opción..." required />
+                        <div class="respuesta-radio">
+                            <input type="radio" id="correcta${respuestaIndex}" name="correctaIndex" value="${respuestaIndex}" required />
+                            <label for="correcta${respuestaIndex}">
+                                <i class="fas fa-check"></i>
+                                Respuesta correcta
+                            </label>
+                        </div>
+                        <button type="button" class="btn-remove-respuesta quitar-respuesta" onclick="removeRespuestaEditForm(this)">
+                            <i class="fas fa-trash"></i>
+                            Eliminar
+                        </button>
+                    </div>
                 `;
                 respuestasContainer.appendChild(nuevaRespuesta);
                 respuestaIndex++;
+                updateCounters();
             });
 
-            // Quitar respuestas nuevas (solo de la interfaz)
-            document.addEventListener('click', function(event) {
-                if (event.target.classList.contains('quitar-respuesta')) {
-                    event.target.parentElement.remove();
+            // Función para actualizar los contadores
+            window.updateCounters = function() {
+                const respuestas = respuestasContainer.querySelectorAll('.respuesta-item');
+                respuestas.forEach((respuesta, index) => {
+                    const counter = respuesta.querySelector('.respuesta-counter');
+                    if (counter) {
+                        counter.textContent = index + 1;
+                    }
+                });
+            };
+
+            // Función para eliminar respuesta nueva (solo de la interfaz)
+            window.removeRespuestaEditForm = function(button) {
+                const respuestaItem = button.closest('.respuesta-item');
+                const respuestas = respuestasContainer.querySelectorAll('.respuesta-item');
+                
+                // No permitir eliminar si solo hay una respuesta
+                if (respuestas.length <= 1) {
+                    Swal.fire({
+                        title: "No se puede eliminar",
+                        text: "Debe haber al menos una opción de respuesta",
+                        icon: "warning",
+                        confirmButtonColor: "#481e8a"
+                    });
+                    return;
                 }
-            });
+                
+                respuestaItem.remove();
+                updateCounters();
+            };
 
             // Eliminar respuestas existentes (de la base de datos)
             document.querySelectorAll('.eliminar-respuesta').forEach(button => {
@@ -72,20 +157,45 @@
                     e.preventDefault();
                     const respuestaId = this.getAttribute('data-id');
 
-                    Swal.fire({
-                        title: "¿Estás seguro?",
-                        text: "Esta acción no se puede deshacer y se eliminará la respuesta permanentemente.",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#dc3545",
-                        cancelButtonColor: "#777777",
-                        confirmButtonText: "Sí, eliminar",
-                        cancelButtonText: "Cancelar"
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = `/respuestas/eliminar/${respuestaId}`;
+                    // Solo proceder si tiene data-id (respuesta existente en BD)
+                    if (respuestaId) {
+                        const respuestas = respuestasContainer.querySelectorAll('.respuesta-item');
+                        
+                        // Verificar que no sea la última respuesta
+                        if (respuestas.length <= 1) {
+                            Swal.fire({
+                                title: "No se puede eliminar",
+                                text: "Debe haber al menos una opción de respuesta",
+                                icon: "warning",
+                                confirmButtonColor: "#481e8a"
+                            });
+                            return;
                         }
-                    });
+
+                        Swal.fire({
+                            title: "¿Estás seguro?",
+                            text: "Esta acción no se puede deshacer y se eliminará la respuesta permanentemente.",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#dc3545",
+                            cancelButtonColor: "#6c757d",
+                            confirmButtonText: "Sí, eliminar",
+                            cancelButtonText: "Cancelar"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Mostrar loading
+                                Swal.fire({
+                                    title: 'Eliminando...',
+                                    text: 'Por favor espera',
+                                    allowOutsideClick: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    }
+                                });
+                                window.location.href = `/respuestas/eliminar/${respuestaId}`;
+                            }
+                        });
+                    }
                 });
             });
         });
