@@ -16,36 +16,70 @@
 <body>
     <div th:replace="fragments/navbar :: navbar"></div>
     
+    <!-- Formas geométricas decorativas -->
+    <div class="geometric-shape shape-1"></div>
+    <div class="geometric-shape shape-2"></div>
+
     <div class="container">
-        <h2 th:text="${titulo}">Respuestas de la Pregunta</h2>
-
-
-        <div th:if="${respuestas.empty}">
-            <div class="alert alert-info">No hay respuestas para esta pregunta</div>
+        <!-- Header moderno -->
+        <div class="respuestas-header">
+            <div class="header-content">
+                <div class="header-info">
+                    <h1 class="page-title" th:text="${titulo}">Respuestas de la Pregunta</h1>
+                    <div class="pregunta-info">
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <a th:href="@{/preguntas/{id}(id=${pregunta.cuestionario.id})}" class="btn-volver">
+                        <i class="fas fa-arrow-left"></i>
+                        Volver a Preguntas
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <table class="data-table" th:unless="${respuestas.empty}">
-            <thead>
-                <tr>
-                    <th>Opción</th>
-                    <th>Respuesta</th>
-                    <th>Correcta</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="respuesta, iterStat : ${respuestas}">
-                    <td class="option-letter" th:text="${#strings.substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ', iterStat.index, iterStat.index + 1)}">A</td>
-                    <td th:text="${respuesta.texto}"></td>
-                    <td>
-                        <span th:if="${respuesta.esCorrecta}" class="correct-answer">✅ Correcta</span>
-                        <span th:unless="${respuesta.esCorrecta}" class="incorrect-answer">❌ Incorrecta</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- Estado vacío -->
+        <div th:if="${respuestas.empty}" class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-list-ul"></i>
+            </div>
+            <h3 class="empty-title">No hay respuestas para esta pregunta</h3>
+            <p class="empty-description">
+                Esta pregunta aún no tiene opciones de respuesta configuradas.
+            </p>
+        </div>
 
-        <div class="create-btn-container">
-            <a th:href="@{/preguntas/{id}(id=${pregunta.cuestionario.id})}" class="btn-secondary">Volver a Preguntas</a>
+        <!-- Tabla de respuestas -->
+        <div th:unless="${respuestas.empty}" class="table-container">
+            <table class="respuestas-table">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-hashtag"></i> Opción</th>
+                        <th><i class="fas fa-align-left"></i> Respuesta</th>
+                        <th><i class="fas fa-check-circle"></i> Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="respuesta, iterStat : ${respuestas}" class="respuesta-row">
+                        <td class="opcion-cell">
+                            <span class="option-badge" th:text="${#strings.substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ', iterStat.index, iterStat.index + 1)}">A</span>
+                        </td>
+                        <td class="respuesta-cell">
+                            <div class="respuesta-texto" th:text="${respuesta.texto}">Texto de la respuesta</div>
+                        </td>
+                        <td class="estado-cell">
+                            <span th:if="${respuesta.esCorrecta}" class="estado-correcto">
+                                <i class="fas fa-check-circle"></i>
+                                Correcta
+                            </span>
+                            <span th:unless="${respuesta.esCorrecta}" class="estado-incorrecto">
+                                <i class="fas fa-times-circle"></i>
+                                Incorrecta
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <script src="/navbar.js"></script>

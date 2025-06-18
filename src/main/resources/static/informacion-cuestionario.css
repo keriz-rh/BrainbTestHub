@@ -1,0 +1,335 @@
+/* Estilos para la página de información del cuestionario */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Formas geométricas decorativas */
+.geometric-shape {
+    position: fixed;
+    z-index: -1;
+    opacity: 0.1;
+}
+
+.shape-1 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, #6f42c1, #8b5cf6);
+    border-radius: 50%;
+    top: 10%;
+    right: -100px;
+    animation: float 6s ease-in-out infinite;
+}
+
+.shape-2 {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, #3b82f6, #06b6d4);
+    transform: rotate(45deg);
+    bottom: 20%;
+    left: -50px;
+    animation: float 8s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+/* Contenedor principal */
+.informacion-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    padding-top: 120px; /* Espacio para navbar */
+}
+
+.informacion-card {
+    background: white;
+    border-radius: 16px;
+    padding: 4rem 3rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    max-width: 900px;
+    width: 100%;
+    position: relative;
+    overflow: visible;
+    margin: 0 auto;
+}
+
+
+/* Icono y título */
+.info-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.main-icon {
+    font-size: 4rem;
+    color: #6f42c1;
+    margin-bottom: 1rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.cuestionario-titulo {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2d1b69;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+/* Información del cuestionario */
+.info-content {
+    margin-bottom: 3rem;
+}
+
+/* Información principal en fila */
+.info-principal {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid rgba(111, 66, 193, 0.1);
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    color: #374151;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+}
+
+.info-item i {
+    color: #6f42c1;
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #4c1d95;
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+}
+
+.info-valor {
+    font-weight: 700;
+    color: #2d1b69;
+    font-size: 1rem;
+}
+
+.info-unidad {
+    font-weight: 500;
+    color: #6b7280;
+    font-size: 1rem;
+}
+
+/* Descripción */
+.descripcion-info {
+    text-align: left;
+}
+
+.descripcion-titulo {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #4c1d95;
+    margin-bottom: 1rem;
+}
+
+.descripcion-titulo i {
+    color: #6f42c1;
+    font-size: 1.3rem;
+}
+
+.descripcion-texto {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #374151;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estados y mensajes */
+.estado-disponible {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.estado-no-disponible {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.mensaje-info {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Botones */
+.btn-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.btn-comenzar {
+    background: linear-gradient(135deg, #6f42c1, #8b5cf6);
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3);
+    text-decoration: none;
+}
+
+.btn-comenzar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(111, 66, 193, 0.4);
+    background: linear-gradient(135deg, #5b21b6, #6f42c1);
+}
+
+.btn-volver {
+    background: linear-gradient(135deg, #6b7280, #4b5563);
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+    text-decoration: none;
+}
+
+.btn-volver:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(107, 114, 128, 0.4);
+    background: linear-gradient(135deg, #4b5563, #374151);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .informacion-container {
+        padding: 1rem;
+        padding-top: 100px;
+    }
+    
+    .informacion-card {
+        padding: 3rem 2rem;
+        max-width: 100%;
+    }
+    
+    .info-principal {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .cuestionario-titulo {
+        font-size: 1.8rem;
+    }
+    
+    .main-icon {
+        font-size: 3rem;
+    }
+    
+    .btn-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn-comenzar,
+    .btn-volver {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .informacion-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .cuestionario-titulo {
+        font-size: 1.6rem;
+    }
+    
+    .info-principal {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .info-item {
+        font-size: 0.9rem;
+    }
+    
+    .descripcion-texto {
+        font-size: 1rem;
+        padding: 1.2rem;
+    }
+} 

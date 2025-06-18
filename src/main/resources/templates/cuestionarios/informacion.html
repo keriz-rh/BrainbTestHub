@@ -1,37 +1,106 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Información del Cuestionario</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Información del Cuestionario - BrainTestHub</title>
+    <link rel="stylesheet" href="/navbar.css">
+    <link rel="stylesheet" href="/informacion-cuestionario.css?v=2">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-
 <body>
-    <h2 th:text="${cuestionario.titulo}">Título del cuestionario</h2>
-
-    <p><strong>Descripción:</strong> <span th:text="${cuestionario.descripcion}">...</span></p>
-    <p><strong>Fecha:</strong> <span th:text="${cuestionario.fecha}">...</span></p>
-    <p><strong>Hora de inicio:</strong> <span th:text="${cuestionario.horaInicio}">...</span></p>
-    <p><strong>Hora de fin:</strong> <span th:text="${cuestionario.horaFin}">...</span></p>
-    <p><strong>Duración:</strong> <span th:text="${cuestionario.duracion}">...</span> minutos</p>
-
-    <div th:if="${estaDisponible}">
-        <form th:action="@{/intentos/resolver/iniciar}" method="post">
-            <input type="hidden" name="cuestionarioId" th:value="${cuestionario.id}" />
-            <button type="submit">Comenzar Intento</button>
-        </form>
+    <!-- Navbar -->
+    <div th:replace="fragments/navbar :: navbar"></div>
+    
+    <!-- Formas geométricas decorativas -->
+    <div class="geometric-shape shape-1"></div>
+    <div class="geometric-shape shape-2"></div>
+    
+    <!-- Contenedor principal -->
+    <div class="informacion-container">
+        <div class="informacion-card">
+            <!-- Header -->
+            <div class="info-header">
+                <h1 class="cuestionario-titulo" th:text="${cuestionario.titulo}">Título del cuestionario</h1>
+            </div>
+            
+            <!-- Información del cuestionario -->
+            <div class="info-content">
+                <!-- Información principal en una fila -->
+                <div class="info-principal">
+                    <div class="info-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span class="info-label">Fecha:</span>
+                        <span class="info-valor" th:text="${#temporals.format(cuestionario.fecha, 'dd/MM/yyyy')}">25/12/2024</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <span class="info-label">Se abre a:</span>
+                        <span class="info-valor" th:text="${#temporals.format(cuestionario.horaInicio, 'HH:mm')}">09:00</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <span class="info-label">Se cierra a:</span>
+                        <span class="info-valor" th:text="${#temporals.format(cuestionario.horaFin, 'HH:mm')}">10:30</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-hourglass-half"></i>
+                        <span class="info-label">Duración:</span>
+                        <span class="info-valor" th:text="${cuestionario.duracion}">90</span>
+                        <span class="info-unidad">min</span>
+                    </div>
+                </div>
+                
+                <!-- Descripción -->
+                <div class="descripcion-info">
+                    <h3 class="descripcion-titulo">
+                        <i class="fas fa-align-left"></i>
+                        Descripción del cuestionario
+                    </h3>
+                    <div class="descripcion-texto" th:text="${cuestionario.descripcion}">
+                        Esta es la descripción completa del cuestionario que explica los objetivos y contenido de la evaluación.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Estado del cuestionario -->
+            <div th:if="${estaDisponible}" class="estado-disponible">
+                <i class="fas fa-check-circle"></i>
+                Este cuestionario está disponible para resolver
+            </div>
+            
+            <div th:unless="${estaDisponible}" class="estado-no-disponible">
+                <i class="fas fa-exclamation-triangle"></i>
+                Este cuestionario no está disponible para resolver en este momento
+            </div>
+            
+            <!-- Mensaje informativo -->
+            <div th:if="${mensaje}" class="mensaje-info">
+                <i class="fas fa-info-circle"></i>
+                <span th:text="${mensaje}">Mensaje</span>
+            </div>
+            
+            <!-- Botones de acción -->
+            <div class="btn-container">
+                <div th:if="${estaDisponible}">
+                    <form th:action="@{/intentos/resolver/iniciar}" method="post" style="display: inline;">
+                        <input type="hidden" name="cuestionarioId" th:value="${cuestionario.id}" />
+                        <button type="submit" class="btn-comenzar">
+                            <i class="fas fa-play-circle"></i>
+                            Comenzar Intento
+                        </button>
+                    </form>
+                </div>
+                
+                <a href="/cuestionarios/elegir" class="btn-volver">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </a>
+            </div>
+        </div>
     </div>
-
-    <div th:unless="${estaDisponible}">
-        <p style="color: crimson; font-weight: bold;">
-            Este cuestionario no está disponible para resolver en este momento.
-        </p>
-    </div>
-
-    <div th:if="${mensaje}" style="padding: 10px; background-color: #ddf; margin-bottom: 10px;">
-        <p th:text="${mensaje}">Mensaje</p>
-    </div>
-
-    <br><a href="/dashboard">Volver</a>
+    
+    <!-- JavaScript del navbar -->
+    <script src="/navbar.js"></script>
 </body>
-
 </html>

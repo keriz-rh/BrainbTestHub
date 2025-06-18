@@ -1,27 +1,100 @@
-<h2>Intentos del cuestionario: <span th:text="${cuestionario.titulo}">Título</span></h2>
-<a th:href="@{/intentos/descargar/{id}(id=${cuestionario.id})}">Generar reporte (Excel)</a>
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Intentos del Cuestionario - BrainTestHub</title>
+    <link rel="stylesheet" href="/navbar.css">
+    <link rel="stylesheet" href="/intentos-cuestionario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <div th:replace="fragments/navbar :: navbar"></div>
+    
+    <!-- Formas geométricas decorativas -->
+    <div class="geometric-shape shape-1"></div>
+    <div class="geometric-shape shape-2"></div>
 
-<table border="1">
-    <thead>
-        <tr>
-            <th>ID Intento</th>
-            <th>Correo</th>
-            <th>Nombre</th>
-            <th>Inicio</th>
-            <th>Fin</th>
-            <th>Acción</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="intento : ${intentos}">
-            <td th:text="${intento.id}">1</td>
-            <td th:text="${intento.correo}">correo</td>
-            <td th:text="${intento.nombre}">nombre</td>
-            <td th:text="${intento.fechaHoraInicio}">inicio</td>
-            <td th:text="${intento.fechaHoraFin} ?: 'En curso'">fin</td>
-            <td>
-                <a th:href="@{/intentos/detalle/{id}(id=${intento.id})}">Detalles</a>
-            </td>
-        </tr>
-    </tbody>
-</table>
+    <!-- Contenedor principal -->
+    <div class="intentos-container">
+        <div class="intentos-card">
+            <!-- Header -->
+            <div class="intentos-header">
+                <h1 class="cuestionario-titulo">
+                    Intentos del cuestionario: 
+                    <span class="titulo-highlight" th:text="${cuestionario.titulo}">Título</span>
+                </h1>
+                <a th:href="@{/intentos/descargar/{id}(id=${cuestionario.id})}" class="btn-descargar">
+                    <i class="fas fa-download"></i>
+                    Generar Reporte Excel
+                </a>
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number" th:text="${#lists.size(intentos)}">0</div>
+                    <div class="stat-label">Total Intentos</div>
+                </div>
+            </div>
+
+            <!-- Tabla de intentos -->
+            <div th:if="${not #lists.isEmpty(intentos)}" class="intentos-table-container">
+                <table class="intentos-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-envelope"></i> Correo</th>
+                            <th><i class="fas fa-user"></i> Nombre</th>
+                            <th><i class="fas fa-play"></i> Inicio</th>
+                            <th><i class="fas fa-stop"></i> Fin</th>
+                            <th><i class="fas fa-star"></i> Puntaje</th>
+                            <th><i class="fas fa-cog"></i> Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="intento : ${intentos}">
+                            <td th:text="${intento.correo}">correo@ejemplo.com</td>
+                            <td th:text="${intento.nombre}">Nombre Usuario</td>
+                            <td th:text="${#temporals.format(intento.fechaHoraInicio, 'dd/MM/yyyy HH:mm')}">01/01/2024 10:00</td>
+                            <td>
+                                <span th:if="${intento.fechaHoraFin != null}" class="estado-completo">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span th:text="${#temporals.format(intento.fechaHoraFin, 'dd/MM/yyyy HH:mm')}">01/01/2024 11:00</span>
+                                </span>
+                                <span th:unless="${intento.fechaHoraFin != null}" class="estado-en-curso">
+                                    <i class="fas fa-clock"></i>
+                                    En curso
+                                </span>
+                            </td>
+                            <td>
+                                <span th:if="${intento.puntaje != null}" class="puntaje puntaje-medio" th:text="${intento.puntaje}">8</span>
+                                <span th:unless="${intento.puntaje != null}" class="estado-en-curso">
+                                    <i class="fas fa-hourglass-half"></i>
+                                    Pendiente
+                                </span>
+                            </td>
+                            <td>
+                                <a th:href="@{/intentos/detalle/{id}(id=${intento.id})}" class="btn-detalles">
+                                    <i class="fas fa-eye"></i>
+                                    Ver Detalles
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mensaje cuando no hay intentos -->
+            <div th:if="${#lists.isEmpty(intentos)}" class="mensaje-vacio">
+                <i class="fas fa-clipboard-list"></i>
+                <h3>No hay intentos registrados</h3>
+                <p>Aún no se han realizado intentos para este cuestionario. Los intentos aparecerán aquí una vez que los usuarios comiencen a resolver el cuestionario.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript del navbar -->
+    <script src="/navbar.js"></script>
+</body>
+</html>

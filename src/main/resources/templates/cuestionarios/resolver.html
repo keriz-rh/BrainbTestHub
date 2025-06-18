@@ -1,16 +1,69 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Resolver Cuestionario</title>
-    <meta charset="UTF-8">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Resolver Cuestionario - BrainTestHub</title>
+    <link rel="stylesheet" href="/navbar.css">
+    <link rel="stylesheet" href="/resolver-cuestionario.css?v=3">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <h2>Resolver un Cuestionario</h2>
-    <form th:action="@{/cuestionarios/resolver}" method="get">
-        <label for="cuestionarioId">Ingresa el ID del cuestionario que deseas resolver:</label><br>
-        <input type="number" id="cuestionarioId" name="cuestionarioId" required>
-        <br><br>
-        <button type="submit">Aceptar</button>
-    </form>
+    <!-- Navbar -->
+    <div th:replace="fragments/navbar :: navbar"></div>
+    
+    <!-- Formas geométricas decorativas -->
+    <div class="geometric-shape shape-1"></div>
+    <div class="geometric-shape shape-2"></div>
+    
+    <!-- Contenedor principal -->
+    <div class="resolver-container">
+        <div class="resolver-card">
+            <!-- Icono principal -->
+            <div class="icon-header">
+                <i class="fas fa-brain main-icon"></i>
+            </div>
+            
+            <!-- Título y subtítulo -->
+            <h1 class="resolver-title">Resolver Cuestionario</h1>
+            <p class="resolver-subtitle">
+                Ingresa el ID del cuestionario que deseas completar para comenzar tu evaluación
+            </p>
+            
+            <!-- Formulario -->
+            <form th:action="@{/cuestionarios/resolver}" method="get" class="resolver-form">
+                <div class="form-group">
+                    <label for="cuestionarioId" class="form-label">
+                        <i class="fas fa-hashtag"></i>
+                        ID del Cuestionario
+                    </label>
+                    <input 
+                        type="number" 
+                        id="cuestionarioId" 
+                        name="cuestionarioId" 
+                        class="form-input"
+                        placeholder="Ejemplo: 12345"
+                        required 
+                        min="1"
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <button type="submit" class="btn-resolver">
+                    <i class="fas fa-play-circle"></i>
+                    Comenzar Cuestionario
+                </button>
+            </form>
+            
+            <!-- Enlace de regreso -->
+            <a href="/dashboard" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Volver al Dashboard
+            </a>
+        </div>
+    </div>
+    
+    <!-- JavaScript del navbar -->
+    <script src="/navbar.js"></script>
 </body>
 </html>

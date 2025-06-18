@@ -1,45 +1,85 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
-    <title>Resolver Cuestionario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolver Cuestionario - BrainTestHub</title>
+    <link rel="stylesheet" href="/navbar.css">
+    <link rel="stylesheet" href="/intento-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
-    <h2>Resolviendo: <span th:text="${intento.cuestionario.titulo}">Título</span></h2>
+    <!-- Navbar -->
+    <div th:replace="fragments/navbar :: navbar"></div>
+    
+    <!-- Formas geométricas decorativas -->
+    <div class="geometric-shape shape-1"></div>
+    <div class="geometric-shape shape-2"></div>
 
-    <div id="temporizador" th:attr="data-tiempo=${tiempoDisponible}"></div>
-    <p><strong>Tiempo restante:</strong> <span id="timer">--:--</span></p>
+    <!-- Contenedor principal -->
+    <div class="intento-container">
+        <div class="intento-card">
+            <!-- Header -->
+            <div class="intento-header">
+                <h1 class="cuestionario-titulo" th:text="${intento.cuestionario.titulo}">Título del Cuestionario</h1>
+            </div>
 
-    <div style="border: 1px dashed #aaa; padding: 10px; margin: 20px 0;">
-        <p>Pregunta [[${index + 1}]] de [[${total}]]</p>
+            <!-- Temporizador -->
+            <div id="temporizador" th:attr="data-tiempo=${tiempoDisponible}" class="timer-container">
+                <div class="timer-label">
+                    <i class="fas fa-clock"></i>
+                    Tiempo restante
+                </div>
+                <div id="timer" class="timer-display">--:--</div>
+            </div>
+
+            <!-- Progreso -->
+            <div class="progress-container">
+                <div class="progress-text">
+                    <i class="fas fa-list-ol"></i>
+                    Pregunta [[${index + 1}]] de [[${total}]]
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" th:style="'width: ' + ${(index + 1) * 100 / total} + '%'"></div>
+                </div>
+            </div>
+
+            <!-- Formulario -->
+            <form th:action="@{/intentos/resolver/guardar}" method="post" id="form-respuesta">
+                <input type="hidden" name="intentoId" th:value="${intento.id}" />
+                <input type="hidden" name="preguntaId" th:value="${pregunta.id}" />
+                <input type="hidden" name="index" th:value="${index}" />
+
+                <!-- Pregunta -->
+                <div class="pregunta-container">
+                    <h2 class="pregunta-titulo" th:text="${pregunta.enunciado}">Texto de la pregunta</h2>
+                </div>
+
+                <!-- Opciones de respuesta -->
+                <div class="respuestas-container">
+                    <label class="respuesta-option" th:each="respuesta : ${pregunta.respuestas}">
+                        <input type="radio" name="respuestaSeleccionadaId" th:value="${respuesta.id}" required />
+                        <div class="respuesta-radio"></div>
+                        <span class="respuesta-texto" th:text="${respuesta.texto}">Texto de la respuesta</span>
+                    </label>
+                </div>
+
+                <!-- Botones -->
+                <div class="botones-container">
+                    <button type="submit" class="btn-principal">
+                        <i th:class="${index + 1 == total ? 'fas fa-check' : 'fas fa-arrow-right'}"></i>
+                        <span th:text="${index + 1 == total ? 'Finalizar Intento' : 'Siguiente Pregunta'}">Siguiente</span>
+                    </button>
+
+                </div>
+            </form>
+        </div>
     </div>
 
-    <form th:action="@{/intentos/resolver/guardar}" method="post" id="form-respuesta">
-        <input type="hidden" name="intentoId" th:value="${intento.id}" />
-        <input type="hidden" name="preguntaId" th:value="${pregunta.id}" />
-        <input type="hidden" name="index" th:value="${index}" />
-        <input type="hidden" name="tiempoAgotado" id="tiempoAgotado">
-
-        <fieldset style="margin-bottom: 20px;">
-            <legend th:text="${pregunta.enunciado}">Texto de la pregunta</legend>
-
-            <div th:each="respuesta : ${pregunta.respuestas}">
-                <label>
-                    <input type="radio" name="respuestaSeleccionadaId" th:value="${respuesta.id}" required />
-                    <span th:text="${respuesta.texto}">Texto de la respuesta</span>
-                </label><br />
-            </div>
-        </fieldset>
-
-        <button type="submit" th:text="${index + 1 == total ? 'Finalizar intento' : 'Siguiente'}">Siguiente</button>
-
-        <button type="button"
-            onclick="document.getElementById('tiempoAgotado').setAttribute('value','true'); document.getElementById('form-respuesta').submit();">
-            Simular Tiempo Agotado
-        </button>
-    </form>
+    <!-- JavaScript del navbar -->
+    <script src="/navbar.js"></script>
 
     <script>
         window.onload = function () {

@@ -1,0 +1,306 @@
+/* ================================
+   ESTILOS ESPECÍFICOS PARA RESOLVER CUESTIONARIO
+   ================================ */
+
+/* Estilos del body para esta página */
+body {
+    margin: 0;
+    padding: 70px 10px 10px 10px; /* Espacio para navbar */
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    min-height: 100vh;
+    overflow: auto;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Formas geométricas decorativas */
+.geometric-shape {
+    position: fixed;
+    z-index: 0;
+    opacity: 0.2;
+}
+
+.shape-1 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, #6f42c1, #8b5cf6);
+    border-radius: 50%;
+    top: 10%;
+    right: -100px;
+    animation: float 6s ease-in-out infinite;
+}
+
+.shape-2 {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, #3b82f6, #06b6d4);
+    transform: rotate(45deg);
+    bottom: 20%;
+    left: -50px;
+    animation: float 8s ease-in-out infinite reverse;
+}
+
+/* Contenedor principal - reemplaza el body flex */
+.resolver-container {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+}
+
+
+
+@keyframes float {
+    0%, 100% { 
+        transform: translateY(0px); 
+    }
+    50% { 
+        transform: translateY(-20px); 
+    }
+}
+
+/* Card principal */
+.resolver-card {
+    background: white;
+    border-radius: 20px;
+    padding: 50px 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    z-index: 10;
+}
+
+
+
+/* Icono principal */
+.icon-header {
+    margin-bottom: 30px;
+}
+
+.main-icon {
+    font-size: 4rem;
+    background: linear-gradient(135deg, #6f42c1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { 
+        transform: scale(1); 
+        opacity: 1; 
+    }
+    50% { 
+        transform: scale(1.05); 
+        opacity: 0.8; 
+    }
+}
+
+/* Título y subtítulo */
+.resolver-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #6f42c1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.resolver-subtitle {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* Formulario */
+.resolver-form {
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 30px;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-label i {
+    color: #6f42c1;
+    font-size: 1.1rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 18px 0px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #f8fafc;
+    color: #2d3748;
+    font-family: inherit;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #6f42c1;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(111, 66, 193, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-input:hover:not(:focus) {
+    border-color: #cbd5e0;
+    background: white;
+}
+
+.form-input::placeholder {
+    color: #a0aec0;
+    font-style: italic;
+}
+
+/* Botón principal */
+.btn-resolver {
+    width: 100%;
+    padding: 18px 30px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: inherit;
+}
+
+.btn-resolver::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-resolver:hover::before {
+    left: 100%;
+}
+
+.btn-resolver:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, #5a67d8, #667eea);
+}
+
+.btn-resolver:active {
+    transform: translateY(-1px);
+}
+
+.btn-resolver i {
+    font-size: 1.2rem;
+}
+
+/* Enlace de regreso */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 30px;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 10px 16px;
+    border-radius: 25px;
+    border: 2px solid transparent;
+}
+
+.back-link:hover {
+    background: rgba(102, 126, 234, 0.1);
+    color: #5a67d8;
+    text-decoration: none;
+    border-color: rgba(102, 126, 234, 0.2);
+    transform: translateX(-5px);
+}
+
+.back-link i {
+    transition: transform 0.3s ease;
+}
+
+.back-link:hover i {
+    transform: translateX(-3px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .resolver-container {
+        padding: 20px 15px;
+    }
+    
+    .resolver-card {
+        padding: 40px 30px;
+        margin: 0 10px;
+    }
+    
+    .resolver-title {
+        font-size: 1.8rem;
+    }
+    
+    .main-icon {
+        font-size: 3rem;
+    }
+    
+    .resolver-container::before,
+    .resolver-container::after {
+        display: none; /* Ocultar formas en móvil para mejor rendimiento */
+    }
+}
+
+@media (max-width: 480px) {
+    .resolver-card {
+        padding: 30px 20px;
+    }
+    
+    .resolver-title {
+        font-size: 1.6rem;
+    }
+    
+    .form-input,
+    .btn-resolver {
+        padding: 15px 18px;
+    }
+} 

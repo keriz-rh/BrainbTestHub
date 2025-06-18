@@ -19,68 +19,99 @@
     <div class="geometric-shape shape-2"></div>
 
     <div class="container">
-      <!-- Título dinámico -->
-      <div class="title" th:text="${titulo}">Lista de Cuestionarios</div>
+      <!-- Header mejorado -->
+      <div class="lista-header">
+        <div class="header-content">
+          <h1 class="page-title" th:text="${titulo}">Lista de Cuestionarios</h1>
+          <div class="header-actions">
+            <a sec:authorize="hasRole('admin')" th:href="@{/cuestionarios/nuevo}" class="btn-nuevo-cuestionario">
+              <i class="fas fa-plus"></i>
+              Nuevo Cuestionario
+            </a>
+          </div>
+        </div>
+      </div>
+
       
       <!-- Notificaciones de éxito y error -->
       <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
       <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-      
-      <!-- Mensaje si no hay cuestionarios -->
-      <div th:if="${cuestionarios.empty}">
-        <div class="alert alert-info">No hay cuestionarios disponibles</div>
-      </div>
-      
       <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
 
-      <!-- Tabla de cuestionarios -->
-      <table class="data-table" th:unless="${cuestionarios.empty}">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Título</th>
-            <th>Descripción</th>
-            <th>Fecha</th>
-            <th>Se abre a</th>
-            <th>Se cierra a</th>
-            <th>Duración (m)</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="cuestionario : ${cuestionarios}">
-            <td th:text="${cuestionario.id}"></td>
-            <td th:text="${cuestionario.titulo}"></td>
-            <td th:text="${cuestionario.descripcion}"></td>
-            <td th:text="${#temporals.format(cuestionario.fecha, 'yyyy-MM-dd')}"></td>
-            <td th:text="${#temporals.format(cuestionario.horaInicio, 'hh:mm a')}"></td>
-            <td th:text="${#temporals.format(cuestionario.horaFin, 'hh:mm a')}"></td>
-            <td th:text="${cuestionario.duracion}"></td>
-            <td>
-              <a th:href="@{/cuestionarios/editar/{id}(id=${cuestionario.id})}" class="action-btn action-btn-edit">
-                <i class="fas fa-edit"></i>
-                Editar
-              </a>
-              <button type="button" th:data-id="${cuestionario.id}" class="action-btn action-btn-delete eliminar-cuestionario">
-                <i class="fas fa-trash"></i>
-                Eliminar
-              </button>
-              <a th:href="@{/preguntas/{id}(id=${cuestionario.id})}" class="action-btn action-btn-view">
-                <i class="fas fa-list"></i>
-                Ver Preguntas
-              </a>
-              <a th:href="@{/intentos/cuestionario/{id}(id=${cuestionario.id})}" class="action-btn action-btn-intentos">
-                <i class="fas fa-chart-line"></i>
-                Ver Intentos
-              </a>
-            </td>              
-          </tr>
-        </tbody>
-      </table>
-      
-      <div class="create-btn-container">
-        <a sec:authorize="hasRole('admin')" th:href="@{/cuestionarios/nuevo}" class="btn-secondary">Nuevo Cuestionario</a>
-      </div>      
+      <!-- Contenido principal -->
+      <div class="main-content">
+        <!-- Mensaje cuando no hay cuestionarios -->
+        <div th:if="${cuestionarios.empty}" class="empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-clipboard-list"></i>
+          </div>
+          <h3 class="empty-title">No hay cuestionarios disponibles</h3>
+          <p class="empty-description">
+            Aún no se han creado cuestionarios. Comienza creando tu primer cuestionario para evaluar a tus estudiantes.
+          </p>
+          <a sec:authorize="hasRole('admin')" th:href="@{/cuestionarios/nuevo}" class="btn-crear-primero">
+            <i class="fas fa-plus"></i>
+            Crear Mi Primer Cuestionario
+          </a>
+        </div>
+
+        <!-- Tabla de cuestionarios mejorada -->
+        <div th:unless="${cuestionarios.empty}" class="cuestionarios-grid">
+          <div class="table-container">
+            <table class="cuestionarios-table">
+              <thead>
+                <tr>
+                  <th><i class="fas fa-hashtag"></i> ID</th>
+                  <th><i class="fas fa-heading"></i> Título</th>
+                  <th><i class="fas fa-align-left"></i> Descripción</th>
+                  <th><i class="fas fa-calendar"></i> Fecha</th>
+                  <th><i class="fas fa-clock"></i> Horario</th>
+                  <th><i class="fas fa-hourglass-half"></i> Duración</th>
+                  <th><i class="fas fa-cogs"></i> Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="cuestionario : ${cuestionarios}" class="cuestionario-row">
+                  <td class="id-cell" th:text="${cuestionario.id}">1</td>
+                  <td class="titulo-cell">
+                    <div class="titulo-content" th:text="${cuestionario.titulo}">Título del cuestionario</div>
+                  </td>
+                  <td class="descripcion-cell">
+                    <div class="descripcion-content" th:text="${cuestionario.descripcion}">Descripción del cuestionario</div>
+                  </td>
+                  <td class="fecha-cell" th:text="${#temporals.format(cuestionario.fecha, 'dd/MM/yyyy')}">01/01/2024</td>
+                  <td class="horario-cell">
+                    <div class="horario-info">
+                      <span class="hora-inicio" th:text="${#temporals.format(cuestionario.horaInicio, 'HH:mm')}">09:00</span>
+                      <span class="separador">-</span>
+                      <span class="hora-fin" th:text="${#temporals.format(cuestionario.horaFin, 'HH:mm')}">10:30</span>
+                    </div>
+                  </td>
+                  <td class="duracion-cell">
+                    <span class="duracion-badge" th:text="${cuestionario.duracion} + ' min'">90 min</span>
+                  </td>
+                  <td class="acciones-cell">
+                    <div class="acciones-group">
+                      <a th:href="@{/cuestionarios/editar/{id}(id=${cuestionario.id})}" class="action-btn btn-editar" title="Editar cuestionario">
+                        <i class="fas fa-edit"></i>
+                      </a>
+                      <a th:href="@{/preguntas/{id}(id=${cuestionario.id})}" class="action-btn btn-preguntas" title="Ver preguntas">
+                        <i class="fas fa-list"></i>
+                      </a>
+                      <a th:href="@{/intentos/cuestionario/{id}(id=${cuestionario.id})}" class="action-btn btn-intentos" title="Ver intentos">
+                        <i class="fas fa-chart-line"></i>
+                      </a>
+                      <button type="button" th:data-id="${cuestionario.id}" class="action-btn btn-eliminar eliminar-cuestionario" title="Eliminar cuestionario">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>              
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
 
   <script src="/navbar.js"></script>

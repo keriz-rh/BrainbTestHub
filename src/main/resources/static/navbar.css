@@ -2,59 +2,153 @@
    ESTILOS PARA NAVBAR
    ================================ */
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
 .navbar {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  height: 60px !important;
-  box-sizing: border-box !important;
+    background: #481e8a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    color: #FFF;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(72, 30, 138, 0.15);
+    box-sizing: border-box;
+    height: 60px;
+    font-family: 'Poppins',sans-serif;
 }
 
 .navbar .logo {
-  display: flex !important;
-  align-items: center !important;
-  height: 100% !important;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
 
 .navbar .logo a {
-  color: white !important;
-  text-decoration: none !important;
+    color: white;
+    text-decoration: none;
 }
 
 .navbar .menu {
-  display: flex !important;
-  align-items: center !important;
-  height: 100% !important;
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
 
 .navbar .menu ul {
-  display: flex !important;
-  align-items: center !important;
-  list-style: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  height: 100% !important;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
 
 .navbar .menu ul li {
-  display: flex !important;
-  align-items: center !important;
-  height: 100% !important;
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
 
 .navbar .menu ul li a {
-  display: flex !important;
-  align-items: center !important;
-  height: 40px !important;
+    text-decoration: none;
+    color: #FFF;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+.navbar .menu ul li a:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .navbar .hamburger {
-  display: none !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  height: 40px !important;
-  width: 40px !important;
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 40px;
+}
+
+.navbar .hamburger span {
+    height: 3px;
+    width: 25px;
+    background: #FFF;
+    border-radius: 3px;
+}
+
+/* ================================
+   RESPONSIVE DESIGN PARA NAVBAR
+   ================================ */
+
+@media (max-width: 768px) {
+    .navbar .menu {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        padding: 0;
+        z-index: 1;
+        max-height: 0;
+        overflow: hidden;
+        background: #481e8a;
+        opacity: 0;
+        transition: max-height 0.5s ease, opacity 0.5s ease;
+    }
+
+    .navbar .menu.active {
+        max-height: 300px;
+        background: #481e8a;
+        opacity: 1;
+    }
+
+    .navbar .hamburger {
+        display: flex;
+    }
+
+    .navbar .menu ul {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+    }
+
+    .navbar .menu ul li {
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .navbar .menu.active ul li {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .navbar .menu ul li a {
+        text-decoration: none;
+        color: #FFF;
+        font-weight: 500;
+        text-align: center;
+        padding: 12px 0;
+        display: block;
+    }
 }
 
 /* ================================
@@ -62,107 +156,106 @@
    ================================ */
 
 .navbar .profile-dropdown {
-  position: relative !important;
-  display: inline-block !important;
-  height: 100% !important;
-  display: flex !important;
-  align-items: center !important;
+    position: relative;
+    display: inline-block;
+    height: 100%;
+    display: flex;
+    align-items: center;
 }
 
 .navbar .profile-dropdown-content {
-  display: none !important;
-  position: absolute !important;
-  right: 0 !important;
-  top: 100% !important;
-  background-color: white !important;
-  min-width: 200px !important;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
-  border-radius: 12px !important;
-  z-index: 1001 !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
-  overflow: hidden !important;
-  margin-top: 8px !important;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    background: white;
+    min-width: 200px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 1001;
+    display: none;
 }
 
 .navbar .profile-dropdown-content.show {
-  display: block !important;
-  animation: slideDown 0.3s ease !important;
+    display: block;
+    animation: profileDropdownSlide 0.3s ease;
 }
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes profileDropdownSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .navbar .profile-dropdown-item {
-  display: flex !important;
-  align-items: center !important;
-  padding: 12px 16px !important;
-  text-decoration: none !important;
-  color: #333 !important;
-  transition: background-color 0.3s ease !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
-  font-size: 14px !important;
-  font-weight: 500 !important;
-  background-color: transparent !important;
-  font-family: 'Poppins', sans-serif !important;
-  line-height: 1.4 !important;
-  white-space: nowrap !important;
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    font-size: 14px;
+    font-weight: 500;
+    background-color: transparent;
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.4;
+    white-space: nowrap;
 }
 
 .navbar .profile-dropdown-item:last-child {
-  border-bottom: none !important;
+    border-bottom: none;
 }
 
 .navbar .profile-dropdown-item:hover {
-  background-color: #f8f9ff !important;
-  color: #481e8a !important;
+    background-color: #f8f9ff;
+    color: #481e8a;
 }
 
 .navbar .profile-dropdown-item i {
-  margin-right: 12px !important;
-  width: 16px !important;
-  color: #481e8a !important;
-  font-size: 14px !important;
+    margin-right: 12px;
+    width: 16px;
+    color: #481e8a;
+    font-size: 14px;
 }
 
 .navbar .profile-icon {
-  cursor: pointer !important;
-  padding: 0 !important;
-  border-radius: 50% !important;
-  transition: all 0.3s ease !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 40px !important;
-  height: 40px !important;
-  color: #FFF !important;
-  text-decoration: none !important;
-  background-color: #481e8a !important;
-  box-shadow: 0 2px 8px rgba(72, 30, 138, 0.3) !important;
-  margin: 0 !important;
-  border: none !important;
-  outline: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    color: #FFF;
+    text-decoration: none;
+    background-color: #481e8a;
+    box-shadow: 0 2px 8px rgba(72, 30, 138, 0.3);
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    border: none;
+    outline: none;
 }
 
 .navbar .profile-icon:hover {
-  background-color: #5a2ba3 !important;
-  color: #FFF !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(72, 30, 138, 0.4) !important;
+    background-color: #5a2ba3;
+    color: #FFF;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(72, 30, 138, 0.4);
 }
 
 .navbar .profile-icon i {
-  font-size: 16px !important;
-  line-height: 1 !important;
-  margin: 0 !important;
-  padding: 0 !important;
+    font-size: 16px;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
 }
 
 /* ================================
@@ -170,29 +263,29 @@
    ================================ */
 
 .navbar .profile-dropdown-content::before {
-  content: '' !important;
-  position: absolute !important;
-  top: -8px !important;
-  right: 20px !important;
-  width: 0 !important;
-  height: 0 !important;
-  border-left: 8px solid transparent !important;
-  border-right: 8px solid transparent !important;
-  border-bottom: 8px solid white !important;
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: 20px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid white;
 }
 
 /* ================================
-   RESPONSIVE DESIGN
+   RESPONSIVE DESIGN PARA DROPDOWN
    ================================ */
 
 @media (max-width: 768px) {
-  .navbar .profile-dropdown-content {
-    right: -10px !important;
-    min-width: 180px !important;
-  }
-  
-  .navbar .profile-dropdown-item {
-    padding: 14px 16px !important;
-    font-size: 15px !important;
-  }
+    .navbar .profile-dropdown-content {
+        right: -10px;
+        min-width: 180px;
+    }
+    
+    .navbar .profile-dropdown-item {
+        padding: 14px 16px;
+        font-size: 15px;
+    }
 } 

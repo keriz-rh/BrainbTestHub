@@ -1,0 +1,416 @@
+/* Reset y estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    color: #1a202c;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Fondo animado */
+body::before, body::after {
+    content: '';
+    position: fixed;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    opacity: 0.05;
+    z-index: -1;
+    animation: float 8s ease-in-out infinite;
+}
+
+body::before {
+    background: linear-gradient(45deg, #6f42c1, #8b5cf6);
+    top: 15%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+body::after {
+    background: linear-gradient(45deg, #48bb78, #38a169);
+    bottom: 15%;
+    right: 10%;
+    animation-delay: 4s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(180deg); }
+}
+
+/* Formas geométricas decorativas */
+.geometric-shape {
+    position: absolute;
+    z-index: -1;
+    opacity: 0.08;
+}
+
+.shape-1 {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(45deg, #6f42c1, #8b5cf6);
+    border-radius: 15px;
+    top: 20%;
+    right: 20%;
+    animation: moveShape 10s linear infinite;
+}
+
+.shape-2 {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(45deg, #48bb78, #38a169);
+    border-radius: 50%;
+    bottom: 25%;
+    left: 25%;
+    animation: moveShape 12s linear infinite reverse;
+}
+
+@keyframes moveShape {
+    0% { transform: rotate(0deg) translateX(0px); }
+    100% { transform: rotate(360deg) translateX(15px); }
+}
+
+/* Contenedor principal */
+.intentos-container {
+    padding: 2rem;
+    padding-top: 120px;
+    min-height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Tarjeta principal */
+.intentos-card {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    position: relative;
+    overflow: visible;
+}
+
+
+/* Header */
+.intentos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.cuestionario-titulo {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0;
+}
+
+.titulo-highlight {
+    color: #6f42c1;
+    font-weight: 800;
+}
+
+/* Botón de descarga */
+.btn-descargar {
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+    text-decoration: none;
+}
+
+.btn-descargar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(72, 187, 120, 0.4);
+    background: linear-gradient(135deg, #38a169, #2f855a);
+    color: white;
+    text-decoration: none;
+}
+
+/* Estadísticas */
+.stats-container {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.stat-card {
+    background: #f7fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    width: 200px;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #4a5568;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Tabla de intentos */
+.intentos-table-container {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: white;
+}
+
+.intentos-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.intentos-table thead {
+    background: #f7fafc;
+}
+
+.intentos-table th {
+    padding: 1.2rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #4a5568;
+    border-bottom: 2px solid #e2e8f0;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.intentos-table td {
+    padding: 1.2rem 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    color: #2d3748;
+    vertical-align: middle;
+}
+
+.intentos-table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.intentos-table tbody tr:hover {
+    background: #f7fafc;
+}
+
+.intentos-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Estados de los intentos */
+.estado-completo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: #f0fff4;
+    color: #2f855a;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid #9ae6b4;
+}
+
+.estado-en-curso {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: #fffbf0;
+    color: #d69e2e;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid #fbd38d;
+}
+
+/* Botón de detalles */
+.btn-detalles {
+    background: linear-gradient(135deg, #4299e1, #3182ce);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-detalles:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+    background: linear-gradient(135deg, #3182ce, #2c5282);
+    color: white;
+    text-decoration: none;
+}
+
+/* Puntajes */
+.puntaje {
+    font-weight: 700;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.puntaje-alto {
+    background: #f0fff4;
+    color: #2f855a;
+    border: 1px solid #9ae6b4;
+}
+
+.puntaje-medio {
+    background: #fffbf0;
+    color: #d69e2e;
+    border: 1px solid #fbd38d;
+}
+
+.puntaje-bajo {
+    background: #fed7d7;
+    color: #c53030;
+    border: 1px solid #fc8181;
+}
+
+/* Mensaje vacío */
+.mensaje-vacio {
+    text-align: center;
+    padding: 3rem;
+    color: #4a5568;
+}
+
+.mensaje-vacio i {
+    font-size: 4rem;
+    color: #cbd5e0;
+    margin-bottom: 1rem;
+}
+
+.mensaje-vacio h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #2d3748;
+}
+
+.mensaje-vacio p {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .intentos-container {
+        padding: 1rem;
+        padding-top: 100px;
+    }
+    
+    .intentos-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .intentos-header {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+    
+    .cuestionario-titulo {
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
+    }
+    
+    .btn-descargar {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .stats-container {
+        justify-content: center;
+        gap: 1rem;
+    }
+    
+    .intentos-table th,
+    .intentos-table td {
+        padding: 0.8rem 0.5rem;
+        font-size: 0.85rem;
+    }
+    
+    .intentos-table th {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .intentos-card {
+        padding: 1.5rem 1rem;
+    }
+    
+    .cuestionario-titulo {
+        font-size: 1.4rem;
+    }
+    
+    .stats-container {
+        justify-content: center;
+    }
+    
+    .stat-card {
+        width: 180px;
+        min-width: 180px;
+    }
+    
+    .stat-number {
+        font-size: 1.6rem;
+    }
+    
+    .intentos-table {
+        font-size: 0.8rem;
+    }
+    
+    .intentos-table th,
+    .intentos-table td {
+        padding: 0.6rem 0.4rem;
+    }
+    
+    .btn-detalles {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+    }
+} 

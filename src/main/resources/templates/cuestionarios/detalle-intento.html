@@ -1,28 +1,157 @@
-<h2>Intento ID: <span th:text="${intento.id}"></span></h2>
-<p><strong>Correo:</strong> <span th:text="${intento.correo}"></span></p>
-<p><strong>Nombre:</strong> <span th:text="${intento.nombre}"></span></p>
-<p><strong>Comienzo:</strong> <span th:text="${intento.fechaHoraInicio}"></span></p>
-<p><strong>Finalizó:</strong> <span th:text="${intento.fechaHoraFin} ?: 'En curso'"></span></p>
-<p><strong>Puntaje:</strong> <span th:text="${intento.puntaje} + ' / ' + ${#lists.size(respuestas)}"></span></p>
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalle del Intento - BrainTestHub</title>
+    <link rel="stylesheet" href="/navbar.css">
+    <link rel="stylesheet" href="/detalle-intento.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <div th:replace="fragments/navbar :: navbar"></div>
+    
+    <!-- Formas geométricas decorativas -->
+    <div class="geometric-shape shape-1"></div>
+    <div class="geometric-shape shape-2"></div>
 
-<table border="1">
-    <thead>
-        <tr>
-            <th>Pregunta</th>
-            <th>Respuesta seleccionada</th>
-            <th>Correcta</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="respuesta : ${respuestas}">
-            <td th:text="${respuesta.pregunta.enunciado}"></td>
-            <td>
-                <span th:if="${respuesta.respuestaSeleccionada != null}"
-                    th:text="${respuesta.respuestaSeleccionada.texto}"></span>
-                <span th:if="${respuesta.respuestaSeleccionada == null}">No respondida</span>
-            </td>
-            <td th:text="${respuesta.respuestaSeleccionada == null ? '🚫' : (respuesta.esCorrecta ? '✔️' : '❌')}"></td>
-        </tr>
+    <!-- Contenedor principal -->
+    <div class="detalle-container">
+        <div class="detalle-card">
+            <!-- Header -->
+            <div class="detalle-header">
+                <h1 class="intento-titulo">
+                    Detalle del Intento 
+                </h1>
+            </div>
 
-    </tbody>
-</table>
+            <!-- Información del intento -->
+            <div class="info-intento">
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-envelope"></i>
+                        Correo Electrónico
+                    </div>
+                    <div class="info-value" th:text="${intento.correo}">usuario@ejemplo.com</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-user"></i>
+                        Nombre Completo
+                    </div>
+                    <div class="info-value" th:text="${intento.nombre}">Nombre Usuario</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-play"></i>
+                        Fecha de Inicio
+                    </div>
+                    <div class="info-value" th:text="${#temporals.format(intento.fechaHoraInicio, 'dd/MM/yyyy HH:mm')}">01/01/2024 10:00</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-stop"></i>
+                        Fecha de Finalización
+                    </div>
+                    <div class="info-value">
+                        <span th:if="${intento.fechaHoraFin != null}" 
+                              class="estado-finalizado"
+                              th:text="${#temporals.format(intento.fechaHoraFin, 'dd/MM/yyyy HH:mm')}">
+                            01/01/2024 11:00
+                        </span>
+                        <span th:unless="${intento.fechaHoraFin != null}" class="estado-en-curso">
+                            <i class="fas fa-clock"></i>
+                            En curso
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Puntaje destacado -->
+            <div class="puntaje-container">
+                <div class="puntaje-card">
+                    <div class="puntaje-label">Puntaje Obtenido</div>
+                    <div class="puntaje-numero" th:text="${intento.puntaje}">8</div>
+                    <div class="puntaje-total">
+                        de <span th:text="${#lists.size(respuestas)}">10</span> preguntas
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de respuestas -->
+            <div class="respuestas-section">
+                <h2 class="section-title">
+                    <i class="fas fa-list-alt"></i>
+                    Detalle de Respuestas
+                </h2>
+                
+                <div class="respuestas-table-container">
+                    <table class="respuestas-table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-question-circle"></i> Pregunta</th>
+                                <th><i class="fas fa-reply"></i> Respuesta Seleccionada</th>
+                                <th><i class="fas fa-check"></i> Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="respuesta : ${respuestas}">
+                                <td>
+                                    <div class="pregunta-texto" th:text="${respuesta.pregunta.enunciado}">
+                                        ¿Cuál es la respuesta correcta?
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="respuesta-texto">
+                                        <span th:if="${respuesta.respuestaSeleccionada != null}"
+                                              th:text="${respuesta.respuestaSeleccionada.texto}">
+                                            Respuesta seleccionada
+                                        </span>
+                                        <span th:if="${respuesta.respuestaSeleccionada == null}" 
+                                              class="respuesta-no-respondida">
+                                            <i class="fas fa-minus"></i>
+                                            No respondida
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span th:if="${respuesta.respuestaSeleccionada == null}" 
+                                          class="respuesta-no-respondida">
+                                        <i class="fas fa-ban"></i>
+                                        Sin respuesta
+                                    </span>
+                                    <span th:if="${respuesta.respuestaSeleccionada != null and respuesta.esCorrecta}" 
+                                          class="respuesta-correcta">
+                                        <i class="fas fa-check-circle"></i>
+                                        Correcta
+                                    </span>
+                                    <span th:if="${respuesta.respuestaSeleccionada != null and not respuesta.esCorrecta}" 
+                                          class="respuesta-incorrecta">
+                                        <i class="fas fa-times-circle"></i>
+                                        Incorrecta
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Botón de regreso -->
+            <div class="btn-container">
+                <a href="javascript:history.back()" class="btn-volver">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver a Intentos
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript del navbar -->
+    <script src="/navbar.js"></script>
+</body>
+</html>

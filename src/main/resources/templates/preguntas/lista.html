@@ -14,54 +14,81 @@
 <body>
     <div th:replace="fragments/navbar :: navbar"></div>
     
-    <div class="container">
-        <h2 th:text="${titulo}">Preguntas del Cuestionario</h2>
+    <!-- Formas geométricas decorativas -->
+    <div class="geometric-shape shape-1"></div>
+    <div class="geometric-shape shape-2"></div>
 
-        <div th:if="${preguntas.empty}">
-            <div class="alert alert-info">No hay preguntas en este cuestionario</div>
+    <div class="container">
+        <!-- Header mejorado -->
+        <div class="preguntas-header">
+            <div class="header-content">
+                <div class="header-info">
+                    <h1 class="page-title" th:text="${titulo}">Preguntas del Cuestionario</h1>
+                    <div class="cuestionario-info">
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <a th:href="@{/preguntas/nueva/{id}(id=${cuestionario.id})}" class="btn-nueva-pregunta">
+                        <i class="fas fa-plus"></i>
+                        Nueva Pregunta
+                    </a>
+                    <a th:href="@{/cuestionarios}" class="btn-volver">
+                        <i class="fas fa-arrow-left"></i>
+                        Volver
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <table class="data-table" th:unless="${preguntas.empty}">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Enunciado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="pregunta : ${preguntas}">
-                    <td th:text="${pregunta.id}"></td>
-                    <td th:text="${pregunta.enunciado}"></td>
-                    <td>
-                        <div class="action-buttons">
-                            <a th:href="@{/preguntas/editar/{id}(id=${pregunta.id})}" class="action-btn action-btn-edit">
-                                <i class="fas fa-edit"></i>
-                                Editar
-                            </a>
-                            <button type="button" th:data-id="${pregunta.id}" class="action-btn action-btn-delete eliminar-pregunta">
-                                <i class="fas fa-trash"></i>
-                                Eliminar
-                            </button>
-                            <a th:href="@{/respuestas/{id}(id=${pregunta.id})}" class="action-btn action-btn-view">
-                                <i class="fas fa-eye"></i>
-                                Ver Respuestas
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- Contenido principal -->
+        <div class="main-content">
+            <!-- Estado vacío -->
+            <div th:if="${preguntas.empty}" class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h3 class="empty-title">No hay preguntas en este cuestionario</h3>
+                <p class="empty-description">
+                    Comienza agregando preguntas para crear tu evaluación. Cada pregunta puede tener múltiples opciones de respuesta.
+                </p>
+                <a th:href="@{/preguntas/nueva/{id}(id=${cuestionario.id})}" class="btn-crear-primera">
+                    <i class="fas fa-plus"></i>
+                    Crear Mi Primera Pregunta
+                </a>
+            </div>
 
-        <div class="create-btn-container">
-            <a th:href="@{/preguntas/nueva/{id}(id=${cuestionario.id})}" class="btn-primary">
-                <i class="fas fa-plus"></i>
-                Agregar Pregunta
-            </a>
-            <a th:href="@{/cuestionarios}" class="btn-secondary">
-                <i class="fas fa-arrow-left"></i>
-                Volver a Cuestionarios
-            </a>
+            <!-- Lista de preguntas -->
+            <div th:unless="${preguntas.empty}" class="preguntas-grid">
+                <div class="preguntas-container">
+                    <div class="pregunta-card" th:each="pregunta, iterStat : ${preguntas}">
+                        <div class="pregunta-header">
+                            <div class="pregunta-numero">
+                                <span class="numero-badge" th:text="'#' + ${iterStat.count}">1</span>
+                            </div>
+                        </div>
+                        
+                        <div class="pregunta-content">
+                            <div class="pregunta-enunciado" th:text="${pregunta.enunciado}">
+                                ¿Cuál es la pregunta del cuestionario?
+                            </div>
+                        </div>
+                        
+                        <div class="pregunta-footer">
+                            <div class="pregunta-acciones">
+                                <a th:href="@{/preguntas/editar/{id}(id=${pregunta.id})}" class="action-btn btn-editar" title="Editar pregunta">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a th:href="@{/respuestas/{id}(id=${pregunta.id})}" class="action-btn btn-respuestas" title="Ver respuestas">
+                                    <i class="fas fa-list-ul"></i>
+                                </a>
+                                <button type="button" th:data-id="${pregunta.id}" class="action-btn btn-eliminar eliminar-pregunta" title="Eliminar pregunta">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
