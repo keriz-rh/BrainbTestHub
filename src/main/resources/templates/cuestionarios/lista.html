@@ -44,7 +44,6 @@
             <th>Se abre a</th>
             <th>Se cierra a</th>
             <th>Duración (m)</th>
-            <th>Usuario</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -57,7 +56,6 @@
             <td th:text="${#temporals.format(cuestionario.horaInicio, 'hh:mm a')}"></td>
             <td th:text="${#temporals.format(cuestionario.horaFin, 'hh:mm a')}"></td>
             <td th:text="${cuestionario.duracion}"></td>
-            <td th:text="${cuestionario.userId}"></td>
             <td>
               <a th:href="@{/cuestionarios/editar/{id}(id=${cuestionario.id})}" class="action-btn action-btn-edit">
                 <i class="fas fa-edit"></i>
@@ -71,6 +69,10 @@
                 <i class="fas fa-list"></i>
                 Ver Preguntas
               </a>
+              <a th:href="@{/intentos/cuestionario/{id}(id=${cuestionario.id})}" class="action-btn action-btn-intentos">
+                <i class="fas fa-chart-line"></i>
+                Ver Intentos
+              </a>
             </td>              
           </tr>
         </tbody>
@@ -81,59 +83,60 @@
       </div>      
     </div>
 
-    <script src="/navbar.js"></script>
-    
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // Manejo de notificaciones con SweetAlert2
-        const success = /*[[${success}]]*/ null;
-        const error = /*[[${error}]]*/ null;
-        
-        if (success) {
+  <script src="/navbar.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Manejo de notificaciones con SweetAlert2
+      const success = /*[[${success}]]*/ null;
+      const error = /*[[${error}]]*/ null;
+
+      if (success) {
+        Swal.fire({
+          title: "¡Éxito!",
+          text: success,
+          icon: "success",
+          confirmButtonColor: "#481e8a",
+          confirmButtonText: "Aceptar"
+        });
+      }
+
+      if (error) {
+        Swal.fire({
+          title: "Error",
+          text: error,
+          icon: "error",
+          confirmButtonColor: "#481e8a",
+          confirmButtonText: "Aceptar"
+        });
+      }
+
+      // Manejo de eliminación de cuestionarios
+      const eliminarBtns = document.querySelectorAll('.eliminar-cuestionario');
+
+      eliminarBtns.forEach(btn => {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          const cuestionarioId = this.getAttribute('data-id');
+
           Swal.fire({
-            title: "¡Éxito!",
-            text: success,
-            icon: "success",
-            confirmButtonColor: "#481e8a",
-            confirmButtonText: "Aceptar"
-          });
-        }
-        
-        if (error) {
-          Swal.fire({
-            title: "Error",
-            text: error,
-            icon: "error",
-            confirmButtonColor: "#481e8a",
-            confirmButtonText: "Aceptar"
-          });
-        }
-        
-        // Manejo de eliminación de cuestionarios
-        const eliminarBtns = document.querySelectorAll('.eliminar-cuestionario');
-        
-        eliminarBtns.forEach(btn => {
-          btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const cuestionarioId = this.getAttribute('data-id');
-            
-            Swal.fire({
-              title: "¿Estás seguro?",
-              text: "Esta acción no se puede deshacer y se eliminará el cuestionario permanentemente.",
-              icon: "warning",
-              showCancelButton: true,
-              confirmButtonColor: "#dc3545",
-              cancelButtonColor: "#777777",
-              confirmButtonText: "Sí, eliminar",
-              cancelButtonText: "Cancelar"
-            }).then((result) => {
-              if (result.isConfirmed) {
-                window.location.href = `/cuestionarios/eliminar/${cuestionarioId}`;
-              }
-            });
+            title: "¿Estás seguro?",
+            text: "Esta acción no se puede deshacer y se eliminará el cuestionario permanentemente.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dc3545",
+            cancelButtonColor: "#777777",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = `/cuestionarios/eliminar/${cuestionarioId}`;
+            }
           });
         });
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
+
 </html>

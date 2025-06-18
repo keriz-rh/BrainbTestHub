@@ -1,6 +1,8 @@
 package DAW.BrainbTestHub.service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class RespuestaUsuarioService {
     private RespuestaUsuarioRepository respuestaUsuarioRepository;
 
     public void guardarRespuesta(IntentoCuestionario intento, Pregunta pregunta, Respuesta respuesta) {
-        
+
         if (respuestaUsuarioRepository.existsByIntentoIdAndPreguntaId(intento.getId(), pregunta.getId())) {
             return;
         }
@@ -27,7 +29,11 @@ public class RespuestaUsuarioService {
         ru.setIntento(intento);
         ru.setPregunta(pregunta);
         ru.setRespuestaSeleccionada(respuesta);
-        ru.setEsCorrecta(respuesta.isEsCorrecta());
+        if (respuesta == null) {
+            ru.setEsCorrecta(false);
+        } else {
+            ru.setEsCorrecta(respuesta.isEsCorrecta());
+        }
 
         respuestaUsuarioRepository.save(ru);
     }
@@ -35,5 +41,12 @@ public class RespuestaUsuarioService {
     public List<RespuestaUsuario> obtenerRespuestasPorIntento(Long intentoId) {
         return respuestaUsuarioRepository.findByIntentoId(intentoId);
     }
-}
 
+    public Set<Long> obtenerIdsPreguntasRespondidas(Long intentoId) {
+        List<RespuestaUsuario> respuestas = respuestaUsuarioRepository.findByIntentoId(intentoId);
+        return respuestas.stream()
+                .map(r -> r.getPregunta().getId())
+                .collect(Collectors.toSet());
+    }
+
+}

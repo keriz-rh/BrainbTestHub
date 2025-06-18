@@ -8,9 +8,12 @@ import DAW.BrainbTestHub.service.CuestionarioService;
 import DAW.BrainbTestHub.service.RespuestaService;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -31,8 +34,16 @@ public class PreguntaController {
 
     @PreAuthorize("hasRole('admin')")
     @GetMapping("/nueva/{cuestionarioId}")
-    public String mostrarFormularioNuevaPregunta(@PathVariable Long cuestionarioId, Model model) {
+    public String mostrarFormularioNuevaPregunta(@PathVariable Long cuestionarioId, Model model, @AuthenticationPrincipal OidcUser principal, RedirectAttributes redirectAttributes) {
         Cuestionario cuestionario = cuestionarioService.getCuestionarioById(cuestionarioId);
+
+        String userId = principal.getSubject();
+        boolean esPropietario = cuestionario.getUserId().equals(userId);
+
+        if (!esPropietario) {
+            redirectAttributes.addFlashAttribute("error", "No tienes permisos para editar este cuestionario.");
+            return "redirect:/cuestionarios";
+        }
         if (cuestionario == null) {
             return "redirect:/cuestionarios";
         }
@@ -72,8 +83,15 @@ public class PreguntaController {
 
     @PreAuthorize("hasRole('admin')")
     @GetMapping("/{cuestionarioId}")
-    public String mostrarPreguntas(@PathVariable Long cuestionarioId, Model model) {
+    public String mostrarPreguntas(@PathVariable Long cuestionarioId, Model model, @AuthenticationPrincipal OidcUser principal, RedirectAttributes redirectAttributes) {
         Cuestionario cuestionario = cuestionarioService.getCuestionarioById(cuestionarioId);
+        String userId = principal.getSubject();
+        boolean esPropietario = cuestionario.getUserId().equals(userId);
+
+        if (!esPropietario) {
+            redirectAttributes.addFlashAttribute("error", "No tienes permisos para ver las preguntas de este cuestionario.");
+            return "redirect:/cuestionarios";
+        }
         if (cuestionario == null) {
             return "redirect:/cuestionarios";
         }
@@ -87,10 +105,18 @@ public class PreguntaController {
 
     @PreAuthorize("hasRole('admin')")
     @GetMapping("/editar/{id}")
-    public String mostrarFormularioEdicion(@PathVariable Long id, Model model) {
+    public String mostrarFormularioEdicion(@PathVariable Long id, Model model, @AuthenticationPrincipal OidcUser principal, RedirectAttributes redirectAttributes) {
         Pregunta pregunta = preguntaService.getPreguntaById(id);
+        Cuestionario cuestionario = pregunta.getCuestionario();
+        String userId = principal.getSubject();
+        boolean esPropietario = cuestionario.getUserId().equals(userId);
+
+        if (!esPropietario) {
+            redirectAttributes.addFlashAttribute("error", "No tienes permisos para editar las preguntas de este cuestionario.");
+            return "redirect:/cuestionarios";
+        }
         if (pregunta == null) {
-            return "redirect:/preguntas/{id}";
+            return "redirect:/cuestionarios";
         }
 
         List<Respuesta> respuestas = respuestaService.obtenerRespuestasPorPregunta(id);
@@ -103,8 +129,17 @@ public class PreguntaController {
 
     @PreAuthorize("hasRole('admin')")
     @GetMapping("/eliminar/{id}")
-    public String eliminarPregunta(@PathVariable Long id) {
+    public String eliminarPregunta(@PathVariable Long id, @AuthenticationPrincipal OidcUser principal, RedirectAttributes redirectAttributes) {
+        Pregunta pregunta = preguntaService.getPreguntaById(id);
+        Cuestionario cuestionario = pregunta.getCuestionario();
+        String userId = principal.getSubject();
+        boolean esPropietario = cuestionario.getUserId().equals(userId);
+
+        if (!esPropietario) {
+            redirectAttributes.addFlashAttribute("error", "No tienes permisos para eliminar las preguntas de este cuestionario.");
+            return "redirect:/cuestionarios";
+        }
         preguntaService.deletePregunta(id);
-        return "redirect:/preguntas/{id}";
+        return "redirect:/preguntas/"+cuestionario.getId();
     }
 }

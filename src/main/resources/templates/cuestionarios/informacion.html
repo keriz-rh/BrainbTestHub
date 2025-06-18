@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Información del Cuestionario</title>
 </head>
+
 <body>
     <h2 th:text="${cuestionario.titulo}">Título del cuestionario</h2>
 
@@ -25,6 +27,11 @@
         </p>
     </div>
 
+    <div th:if="${mensaje}" style="padding: 10px; background-color: #ddf; margin-bottom: 10px;">
+        <p th:text="${mensaje}">Mensaje</p>
+    </div>
+
     <br><a href="/dashboard">Volver</a>
 </body>
+
 </html>

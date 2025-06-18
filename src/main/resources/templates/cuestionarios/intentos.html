@@ -1,0 +1,27 @@
+<h2>Intentos del cuestionario: <span th:text="${cuestionario.titulo}">Título</span></h2>
+<a th:href="@{/intentos/descargar/{id}(id=${cuestionario.id})}">Generar reporte (Excel)</a>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID Intento</th>
+            <th>Correo</th>
+            <th>Nombre</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="intento : ${intentos}">
+            <td th:text="${intento.id}">1</td>
+            <td th:text="${intento.correo}">correo</td>
+            <td th:text="${intento.nombre}">nombre</td>
+            <td th:text="${intento.fechaHoraInicio}">inicio</td>
+            <td th:text="${intento.fechaHoraFin} ?: 'En curso'">fin</td>
+            <td>
+                <a th:href="@{/intentos/detalle/{id}(id=${intento.id})}">Detalles</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

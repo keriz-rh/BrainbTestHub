@@ -1,6 +1,7 @@
 package DAW.BrainbTestHub.service;
 
 import DAW.BrainbTestHub.model.Cuestionario;
+import DAW.BrainbTestHub.model.IntentoCuestionario;
 import DAW.BrainbTestHub.repository.CuestionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,17 +58,18 @@ public class CuestionarioService {
         return ahora.isAfter(inicioPrueba) && ahora.isBefore(finPrueba);
     }
 
-    public long calcularTiempoDisponible(Cuestionario cuestionario, LocalDateTime ahora) {
-        LocalDateTime horaFin = LocalDateTime.of(cuestionario.getFecha(), cuestionario.getHoraFin());
-        long segundosHastaFin = Duration.between(ahora, horaFin).getSeconds();
-        long duracionEnSegundos = cuestionario.getDuracion() * 60;
+    public long calcularTiempoRestante(IntentoCuestionario intento, LocalDateTime ahora) {
+        LocalDateTime inicio = intento.getFechaHoraInicio();
+        long segundosTranscurridos = Duration.between(inicio, ahora).getSeconds();
 
-        if (segundosHastaFin <= 0) {
-            return 0;
-        }
+        long totalPermitido = Math.min(
+                Duration.between(inicio, LocalDateTime.of(
+                        intento.getCuestionario().getFecha(),
+                        intento.getCuestionario().getHoraFin())).getSeconds(),
+                intento.getCuestionario().getDuracion() * 60);
 
-        long resultado = Math.min(duracionEnSegundos, segundosHastaFin);
-        return resultado;
+        long restante = totalPermitido - segundosTranscurridos;
+        return Math.max(restante, 0);
     }
 
 }
