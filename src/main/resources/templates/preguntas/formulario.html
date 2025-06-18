@@ -1,33 +1,80 @@
 <!doctype html>
-<html lang="en-US" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
     <title th:text="${titulo}">Agregar Pregunta y Respuestas</title>
     <link rel="stylesheet" href="/cuestionario-style.css">
+    <link rel="stylesheet" href="/preguntas-formulario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <script src="/navbar.js"></script>
+    <div th:replace="fragments/navbar :: navbar"></div>
+
     <div class="container">
-        <h2 th:text="${titulo}">Agregar Pregunta y Respuestas</h2>
-
-        <form th:action="@{/preguntas/guardar}" method="post">
-            <input type="hidden" name="cuestionarioId" th:value="${cuestionario.id}" />
-
-            <label for="enunciado">Enunciado de la pregunta:</label>
-            <input type="text" id="enunciado" name="enunciado" required />
-
-            <h3>Respuestas</h3>
-            <div id="respuestas-container">
-                <div class="respuesta">
-                    <input type="text" name="textos" placeholder="Texto de la respuesta" required />
-                    <input type="radio" name="correctaIndex" value="0" required /> Correcta
-                    <button type="button" class="quitar-respuesta">❌ Quitar</button>
-                </div>
+        <div class="pregunta-form-container">
+            <div class="form-header">
+                <h2 th:text="${titulo}">Agregar Pregunta y Respuestas</h2>
+                <p class="subtitle">Crea una nueva pregunta con múltiples opciones de respuesta</p>
             </div>
 
-            <button type="button" id="agregar-respuesta">➕ Agregar Respuesta</button>
+            <form th:action="@{/preguntas/guardar}" method="post">
+                <input type="hidden" name="cuestionarioId" th:value="${cuestionario.id}" />
 
-            <button type="submit">Guardar Pregunta y Respuestas</button>
-        </form>
+                <div class="pregunta-section">
+                    <h3>
+                        <i class="fas fa-question-circle"></i>
+                        Pregunta
+                    </h3>
+                    <div class="pregunta-input-group">
+                        <label for="enunciado">Enunciado de la pregunta:</label>
+                        <textarea id="enunciado" name="enunciado" placeholder="Escribe aquí tu pregunta..." required></textarea>
+                    </div>
+                </div>
+
+                <div class="respuestas-section">
+                    <h3>
+                        <i class="fas fa-list-check"></i>
+                        Opciones de Respuesta
+                    </h3>
+                    <div id="respuestas-container">
+                        <div class="respuesta-item">
+                            <div class="respuesta-counter">1</div>
+                            <div class="respuesta-content">
+                                <input type="text" name="textos" placeholder="Escribe la primera opción..." required />
+                                <div class="respuesta-radio">
+                                    <input type="radio" id="correcta0" name="correctaIndex" value="0" required />
+                                    <label for="correcta0">
+                                        <i class="fas fa-check"></i>
+                                        Respuesta correcta
+                                    </label>
+                                </div>
+                                <button type="button" class="btn-remove-respuesta" onclick="removeRespuesta(this)">
+                                    <i class="fas fa-trash"></i>
+                                    Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-add-respuesta" id="agregar-respuesta">
+                        <i class="fas fa-plus"></i>
+                        Agregar Nueva Opción
+                    </button>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        Guardar Pregunta
+                    </button>
+                    <a th:href="@{/preguntas/{id}(id=${cuestionario.id})}" class="btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -40,22 +87,54 @@
             // Agregar nueva respuesta
             agregarBtn.addEventListener('click', function() {
                 const nuevaRespuesta = document.createElement('div');
-                nuevaRespuesta.classList.add('respuesta');
+                nuevaRespuesta.classList.add('respuesta-item');
                 nuevaRespuesta.innerHTML = `
-                    <input type="text" name="textos" placeholder="Texto de la respuesta" required />
-                    <input type="radio" name="correctaIndex" value="${respuestaIndex}" required /> Correcta
-                    <button type="button" class="quitar-respuesta">❌ Quitar</button>
+                    <div class="respuesta-counter">${respuestaIndex + 1}</div>
+                    <div class="respuesta-content">
+                        <input type="text" name="textos" placeholder="Escribe otra opción..." required />
+                        <div class="respuesta-radio">
+                            <input type="radio" id="correcta${respuestaIndex}" name="correctaIndex" value="${respuestaIndex}" required />
+                            <label for="correcta${respuestaIndex}">
+                                <i class="fas fa-check"></i>
+                                Respuesta correcta
+                            </label>
+                        </div>
+                        <button type="button" class="btn-remove-respuesta" onclick="removeRespuesta(this)">
+                            <i class="fas fa-trash"></i>
+                            Eliminar
+                        </button>
+                    </div>
                 `;
                 respuestasContainer.appendChild(nuevaRespuesta);
                 respuestaIndex++;
+                updateCounters();
             });
 
-            // Quitar respuestas nuevas (solo de la interfaz)
-            document.addEventListener('click', function(event) {
-                if (event.target.classList.contains('quitar-respuesta')) {
-                    event.target.parentElement.remove();
+            // Función para actualizar los contadores
+            window.updateCounters = function() {
+                const respuestas = respuestasContainer.querySelectorAll('.respuesta-item');
+                respuestas.forEach((respuesta, index) => {
+                    const counter = respuesta.querySelector('.respuesta-counter');
+                    if (counter) {
+                        counter.textContent = index + 1;
+                    }
+                });
+            };
+
+            // Función para eliminar respuesta
+            window.removeRespuesta = function(button) {
+                const respuestaItem = button.closest('.respuesta-item');
+                const respuestas = respuestasContainer.querySelectorAll('.respuesta-item');
+                
+                // No permitir eliminar si solo hay una respuesta
+                if (respuestas.length <= 1) {
+                    alert('Debe haber al menos una opción de respuesta');
+                    return;
                 }
-            });
+                
+                respuestaItem.remove();
+                updateCounters();
+            };
         });
     </script>
 </body>

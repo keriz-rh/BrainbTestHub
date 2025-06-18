@@ -1,15 +1,24 @@
 <!doctype html>
-<html lang="en-US" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
     <title th:text="${titulo}">Respuestas de la Pregunta</title>
     <link rel="stylesheet" href="/cuestionario-style.css">
+    <link rel="stylesheet" href="/respuestas-lista.css">
+    <link rel="stylesheet" href="/navbar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            padding-top: 70px; /* Espacio para el navbar fijo */
+        }
+    </style>
 </head>
 <body>
+    <div th:replace="fragments/navbar :: navbar"></div>
+    
     <div class="container">
         <h2 th:text="${titulo}">Respuestas de la Pregunta</h2>
 
-        <p th:text="'Pregunta: ' + ${pregunta.enunciado}"></p>
 
         <div th:if="${respuestas.empty}">
             <div class="alert alert-info">No hay respuestas para esta pregunta</div>
@@ -18,16 +27,19 @@
         <table class="data-table" th:unless="${respuestas.empty}">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Texto</th>
+                    <th>Opción</th>
+                    <th>Respuesta</th>
                     <th>Correcta</th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="respuesta : ${respuestas}">
-                    <td th:text="${respuesta.id}"></td>
+                <tr th:each="respuesta, iterStat : ${respuestas}">
+                    <td class="option-letter" th:text="${#strings.substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ', iterStat.index, iterStat.index + 1)}">A</td>
                     <td th:text="${respuesta.texto}"></td>
-                    <td th:text="${respuesta.esCorrecta ? '✅ Sí' : '❌ No'}"></td>
+                    <td>
+                        <span th:if="${respuesta.esCorrecta}" class="correct-answer">✅ Correcta</span>
+                        <span th:unless="${respuesta.esCorrecta}" class="incorrect-answer">❌ Incorrecta</span>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -36,5 +48,6 @@
             <a th:href="@{/preguntas/{id}(id=${pregunta.cuestionario.id})}" class="btn-secondary">Volver a Preguntas</a>
         </div>
     </div>
+    <script src="/navbar.js"></script>
 </body>
 </html>
