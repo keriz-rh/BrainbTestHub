@@ -18,8 +18,9 @@ public class LogoutController {
     @Value("${auth0.clientId}")
     private String clientId;
 
-    //@Value("${auth0.logoutRedirectUrl:https://braintesthub.onrender.com/}")
-    @Value("${auth0.logoutRedirectUrl:http://localhost:8080}")
+    
+    //@Value("${auth0.logoutRedirectUrl:http://localhost:8080}")
+    @Value("${auth0.logoutRedirectUrl:https://braintesthub.onrender.com/}")
     private String logoutRedirectUrl;
 
     @GetMapping("/logout")

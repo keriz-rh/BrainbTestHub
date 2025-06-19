@@ -37,6 +37,9 @@ public class Cuestionario {
     @OneToMany(mappedBy = "cuestionario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pregunta> preguntas;
 
+    @OneToMany(mappedBy = "cuestionario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<IntentoCuestionario> intentos;
+
     // Asigna la fecha actual si no se proporciona
     @PrePersist
     protected void prePersist() {
