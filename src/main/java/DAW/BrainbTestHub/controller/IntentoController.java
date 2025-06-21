@@ -60,6 +60,7 @@ public class IntentoController {
     @Autowired
     private RespuestaUsuarioService respuestaUsuarioService;
 
+    @PreAuthorize("hasAnyRole('admin', 'user')")
     @PostMapping("/resolver/iniciar")
     public String iniciarIntento(@RequestParam("cuestionarioId") Long cuestionarioId,
             @AuthenticationPrincipal OidcUser principal,
@@ -112,6 +113,7 @@ public class IntentoController {
         return "intentos/intento";
     }
 
+    @PreAuthorize("hasAnyRole('admin', 'user')")
     @PostMapping("/resolver/guardar")
     public String guardarRespuesta(@RequestParam Long intentoId,
             @RequestParam Long preguntaId,

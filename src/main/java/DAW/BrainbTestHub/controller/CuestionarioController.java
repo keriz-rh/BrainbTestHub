@@ -21,6 +21,7 @@ public class CuestionarioController {
     @Autowired
     private CuestionarioService cuestionarioService;
 
+    @PreAuthorize("hasRole('admin')")
     @GetMapping
     public String listarCuestionarios(Model model, @AuthenticationPrincipal OidcUser principal) {
         List<Cuestionario> cuestionarios = cuestionarioService.getCuestionariosPorUserId(principal.getSubject());
@@ -117,11 +118,13 @@ public class CuestionarioController {
         return "redirect:/cuestionarios";
     }
 
+    @PreAuthorize("hasAnyRole('admin', 'user')")
     @GetMapping("/elegir")
     public String mostrarFormularioEleccion() {
         return "cuestionarios/resolver"; // Vista con el campo para ingresar el ID
     }
 
+    @PreAuthorize("hasAnyRole('admin', 'user')")
     @GetMapping("/resolver")
     public String mostrarCuestionario(@RequestParam("cuestionarioId") Long id,
             Model model) {
