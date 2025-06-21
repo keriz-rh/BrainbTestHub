@@ -37,14 +37,15 @@ public class PreguntaController {
     public String mostrarFormularioNuevaPregunta(@PathVariable Long cuestionarioId, Model model, @AuthenticationPrincipal OidcUser principal, RedirectAttributes redirectAttributes) {
         Cuestionario cuestionario = cuestionarioService.getCuestionarioById(cuestionarioId);
 
+        if (cuestionario == null) {
+            return "redirect:/cuestionarios";
+        }
+
         String userId = principal.getSubject();
         boolean esPropietario = cuestionario.getUserId().equals(userId);
 
         if (!esPropietario) {
             redirectAttributes.addFlashAttribute("error", "No tienes permisos para editar este cuestionario.");
-            return "redirect:/cuestionarios";
-        }
-        if (cuestionario == null) {
             return "redirect:/cuestionarios";
         }
 
@@ -85,14 +86,16 @@ public class PreguntaController {
     @GetMapping("/{cuestionarioId}")
     public String mostrarPreguntas(@PathVariable Long cuestionarioId, Model model, @AuthenticationPrincipal OidcUser principal, RedirectAttributes redirectAttributes) {
         Cuestionario cuestionario = cuestionarioService.getCuestionarioById(cuestionarioId);
+
+        if (cuestionario == null) {
+            return "redirect:/cuestionarios";
+        }
+
         String userId = principal.getSubject();
         boolean esPropietario = cuestionario.getUserId().equals(userId);
 
         if (!esPropietario) {
             redirectAttributes.addFlashAttribute("error", "No tienes permisos para ver las preguntas de este cuestionario.");
-            return "redirect:/cuestionarios";
-        }
-        if (cuestionario == null) {
             return "redirect:/cuestionarios";
         }
 
@@ -107,15 +110,18 @@ public class PreguntaController {
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEdicion(@PathVariable Long id, Model model, @AuthenticationPrincipal OidcUser principal, RedirectAttributes redirectAttributes) {
         Pregunta pregunta = preguntaService.getPreguntaById(id);
+
+        if (pregunta == null) {
+            return "redirect:/cuestionarios";
+        }
+
         Cuestionario cuestionario = pregunta.getCuestionario();
+        
         String userId = principal.getSubject();
         boolean esPropietario = cuestionario.getUserId().equals(userId);
 
         if (!esPropietario) {
             redirectAttributes.addFlashAttribute("error", "No tienes permisos para editar las preguntas de este cuestionario.");
-            return "redirect:/cuestionarios";
-        }
-        if (pregunta == null) {
             return "redirect:/cuestionarios";
         }
 

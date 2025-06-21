@@ -32,16 +32,19 @@ public class RespuestaController {
     @GetMapping("/{preguntaId}")
     public String mostrarRespuestas(@PathVariable Long preguntaId, Model model, @AuthenticationPrincipal OidcUser principal, RedirectAttributes redirectAttributes) {
         Pregunta pregunta = preguntaService.getPreguntaById(preguntaId);
+
+        if (pregunta == null) {
+            return "redirect:/preguntas";
+        }
+
         Cuestionario cuestionario = pregunta.getCuestionario();
+
         String userId = principal.getSubject();
         boolean esPropietario = cuestionario.getUserId().equals(userId);
 
         if (!esPropietario) {
             redirectAttributes.addFlashAttribute("error", "No tienes permisos para ver las respuestas de este cuestionario.");
             return "redirect:/cuestionarios";
-        }
-        if (pregunta == null) {
-            return "redirect:/preguntas";
         }
 
         List<Respuesta> respuestas = respuestaService.obtenerRespuestasPorPregunta(preguntaId);
