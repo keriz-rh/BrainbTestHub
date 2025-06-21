@@ -116,7 +116,7 @@
                       <a th:href="@{/intentos/cuestionario/{id}(id=${cuestionario.id})}" class="action-btn btn-intentos" title="Ver intentos">
                         <i class="fas fa-chart-line"></i>
                       </a>
-                      <button th:if="${cuestionarioService.sePuedeEditar(cuestionario)}" type="button" th:data-id="${cuestionario.id}" class="action-btn btn-eliminar eliminar-cuestionario" title="Eliminar cuestionario">
+                      <button type="button" th:data-id="${cuestionario.id}" class="action-btn btn-eliminar eliminar-cuestionario" title="Eliminar cuestionario">
                         <i class="fas fa-trash"></i>
                       </button>
                     </div>

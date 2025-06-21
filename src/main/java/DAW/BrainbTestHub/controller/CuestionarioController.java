@@ -134,16 +134,6 @@ public class CuestionarioController {
             redirectAttributes.addFlashAttribute("error", "No tienes permisos para editar este cuestionario.");
             return "redirect:/cuestionarios";
         }
-
-        // Verificar si el cuestionario se puede editar
-        if (!cuestionarioService.sePuedeEditar(cuestionario)) {
-            if (cuestionarioService.estaActivo(cuestionario)) {
-                redirectAttributes.addFlashAttribute("error", "No se puede eliminar el cuestionario mientras está activo.");
-            } else if (cuestionarioService.haFinalizado(cuestionario)) {
-                redirectAttributes.addFlashAttribute("error", "No se puede eliminar el cuestionario después de que ha finalizado.");
-            }
-            return "redirect:/cuestionarios";
-        }
         
         cuestionarioService.deleteCuestionario(id);
         return "redirect:/cuestionarios";
