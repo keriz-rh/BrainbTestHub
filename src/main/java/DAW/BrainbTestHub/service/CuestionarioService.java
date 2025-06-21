@@ -72,4 +72,50 @@ public class CuestionarioService {
         return Math.max(restante, 0);
     }
 
+    /**
+     * Verifica si un cuestionario está activo (en su ventana de tiempo)
+     */
+    public boolean estaActivo(Cuestionario cuestionario) {
+        LocalDateTime ahora = LocalDateTime.now();
+        LocalDate fecha = cuestionario.getFecha();
+        LocalTime inicio = cuestionario.getHoraInicio();
+        LocalTime fin = cuestionario.getHoraFin();
+
+        LocalDateTime inicioPrueba = LocalDateTime.of(fecha, inicio);
+        LocalDateTime finPrueba = LocalDateTime.of(fecha, fin);
+
+        return ahora.isAfter(inicioPrueba) && ahora.isBefore(finPrueba);
+    }
+
+    /**
+     * Verifica si un cuestionario ha finalizado (pasó su hora de fin)
+     */
+    public boolean haFinalizado(Cuestionario cuestionario) {
+        LocalDateTime ahora = LocalDateTime.now();
+        LocalDate fecha = cuestionario.getFecha();
+        LocalTime fin = cuestionario.getHoraFin();
+
+        LocalDateTime finPrueba = LocalDateTime.of(fecha, fin);
+        return ahora.isAfter(finPrueba);
+    }
+
+    /**
+     * Verifica si un cuestionario se puede editar (no está activo ni finalizado)
+     */
+    public boolean sePuedeEditar(Cuestionario cuestionario) {
+        return !estaActivo(cuestionario) && !haFinalizado(cuestionario);
+    }
+
+    /**
+     * Verifica si un cuestionario ha comenzado (ya pasó su hora de inicio)
+     */
+    public boolean haComenzado(Cuestionario cuestionario) {
+        LocalDateTime ahora = LocalDateTime.now();
+        LocalDate fecha = cuestionario.getFecha();
+        LocalTime inicio = cuestionario.getHoraInicio();
+
+        LocalDateTime inicioPrueba = LocalDateTime.of(fecha, inicio);
+        return ahora.isAfter(inicioPrueba);
+    }
+
 }

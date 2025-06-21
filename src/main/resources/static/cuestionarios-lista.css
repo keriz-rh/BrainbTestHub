@@ -471,3 +471,59 @@ body {
         font-size: 13px;
     }
 }
+
+/* Estilos para indicadores de estado */
+.estado-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.estado-badge.estado-activo {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.estado-badge.estado-activo i {
+    color: #f39c12;
+}
+
+.estado-badge.estado-finalizado {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.estado-badge.estado-finalizado i {
+    color: #e74c3c;
+}
+
+.estado-badge.estado-pendiente {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.estado-badge.estado-pendiente i {
+    color: #17a2b8;
+}
+
+/* Ajustes para la celda de estado */
+.estado-cell {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Ajustes para acciones deshabilitadas */
+.action-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}

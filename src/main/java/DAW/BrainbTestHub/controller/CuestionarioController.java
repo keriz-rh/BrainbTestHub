@@ -25,9 +25,8 @@ public class CuestionarioController {
     @GetMapping
     public String listarCuestionarios(Model model, @AuthenticationPrincipal OidcUser principal) {
         List<Cuestionario> cuestionarios = cuestionarioService.getCuestionariosPorUserId(principal.getSubject());
-        cuestionarios.forEach(c -> System.out.println(c.getTitulo()));
-
         model.addAttribute("cuestionarios", cuestionarios);
+        model.addAttribute("cuestionarioService", cuestionarioService);
         model.addAttribute("titulo", "Lista de Cuestionarios");
         return "cuestionarios/lista";
     }
@@ -49,6 +48,18 @@ public class CuestionarioController {
         Cuestionario original = (form.getId() != null)
                 ? cuestionarioService.getCuestionarioById(form.getId())
                 : new Cuestionario();
+
+        // Si es una edición, verificar si se puede editar
+        if (form.getId() != null && original != null) {
+            if (!cuestionarioService.sePuedeEditar(original)) {
+                if (cuestionarioService.estaActivo(original)) {
+                    redirectAttributes.addFlashAttribute("error", "No se puede editar el cuestionario mientras está activo.");
+                } else if (cuestionarioService.haFinalizado(original)) {
+                    redirectAttributes.addFlashAttribute("error", "No se puede editar el cuestionario después de que ha finalizado.");
+                }
+                return "redirect:/cuestionarios";
+            }
+        }
 
         if (form.getHoraInicio().isAfter(form.getHoraFin())) {
             model.addAttribute("error", "La hora de inicio debe ser antes de la hora de finalización.");
@@ -93,6 +104,16 @@ public class CuestionarioController {
             return "redirect:/cuestionarios";
         }
 
+        // Verificar si el cuestionario se puede editar
+        if (!cuestionarioService.sePuedeEditar(cuestionario)) {
+            if (cuestionarioService.estaActivo(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se puede editar el cuestionario mientras está activo.");
+            } else if (cuestionarioService.haFinalizado(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se puede editar el cuestionario después de que ha finalizado.");
+            }
+            return "redirect:/cuestionarios";
+        }
+
         if (cuestionario != null) {
             model.addAttribute("cuestionario", cuestionario);
             model.addAttribute("titulo", "Editar Cuestionario");
@@ -111,6 +132,16 @@ public class CuestionarioController {
 
         if (!esPropietario) {
             redirectAttributes.addFlashAttribute("error", "No tienes permisos para editar este cuestionario.");
+            return "redirect:/cuestionarios";
+        }
+
+        // Verificar si el cuestionario se puede editar
+        if (!cuestionarioService.sePuedeEditar(cuestionario)) {
+            if (cuestionarioService.estaActivo(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se puede eliminar el cuestionario mientras está activo.");
+            } else if (cuestionarioService.haFinalizado(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se puede eliminar el cuestionario después de que ha finalizado.");
+            }
             return "redirect:/cuestionarios";
         }
         

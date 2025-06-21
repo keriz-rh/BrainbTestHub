@@ -20,22 +20,30 @@
 
     <div class="container">
         <!-- Header mejorado -->
-        <div class="preguntas-header">
+        <div class="content-header">
             <div class="header-content">
-                <div class="header-info">
-                    <h1 class="page-title" th:text="${titulo}">Preguntas del Cuestionario</h1>
-                    <div class="cuestionario-info">
-                    </div>
-                </div>
+                <h1 th:text="${titulo}">Preguntas del Cuestionario</h1>
                 <div class="header-actions">
-                    <a th:href="@{/preguntas/nueva/{id}(id=${cuestionario.id})}" class="btn-nueva-pregunta">
+                    <a th:if="${cuestionarioService.sePuedeEditar(cuestionario)}" th:href="@{/preguntas/nueva/{id}(id=${cuestionario.id})}" class="btn-primary">
                         <i class="fas fa-plus"></i>
-                        Nueva Pregunta
+                        Agregar Pregunta
                     </a>
-                    <a th:href="@{/cuestionarios}" class="btn-volver">
+                    <a th:href="@{/cuestionarios}" class="btn-secondary">
                         <i class="fas fa-arrow-left"></i>
-                        Volver
+                        Volver a Cuestionarios
                     </a>
+                </div>
+            </div>
+            
+            <!-- Indicador de estado del cuestionario -->
+            <div th:if="${!cuestionarioService.sePuedeEditar(cuestionario)}" class="estado-cuestionario">
+                <div th:if="${cuestionarioService.estaActivo(cuestionario)}" class="estado-badge estado-activo">
+                    <i class="fas fa-clock"></i>
+                    Cuestionario Activo - No se pueden editar las preguntas
+                </div>
+                <div th:if="${cuestionarioService.haFinalizado(cuestionario)}" class="estado-badge estado-finalizado">
+                    <i class="fas fa-check-circle"></i>
+                    Cuestionario Finalizado - No se pueden editar las preguntas
                 </div>
             </div>
         </div>
@@ -75,13 +83,13 @@
                         
                         <div class="pregunta-footer">
                             <div class="pregunta-acciones">
-                                <a th:href="@{/preguntas/editar/{id}(id=${pregunta.id})}" class="action-btn btn-editar" title="Editar pregunta">
+                                <a th:if="${cuestionarioService.sePuedeEditar(cuestionario)}" th:href="@{/preguntas/editar/{id}(id=${pregunta.id})}" class="action-btn btn-editar" title="Editar pregunta">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <a th:href="@{/respuestas/{id}(id=${pregunta.id})}" class="action-btn btn-respuestas" title="Ver respuestas">
                                     <i class="fas fa-list-ul"></i>
                                 </a>
-                                <button type="button" th:data-id="${pregunta.id}" class="action-btn btn-eliminar eliminar-pregunta" title="Eliminar pregunta">
+                                <button th:if="${cuestionarioService.sePuedeEditar(cuestionario)}" type="button" th:data-id="${pregunta.id}" class="action-btn btn-eliminar eliminar-pregunta" title="Eliminar pregunta">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>

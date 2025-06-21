@@ -5,6 +5,7 @@ import DAW.BrainbTestHub.model.Cuestionario;
 import DAW.BrainbTestHub.model.Pregunta;
 import DAW.BrainbTestHub.service.RespuestaService;
 import DAW.BrainbTestHub.service.PreguntaService;
+import DAW.BrainbTestHub.service.CuestionarioService;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,10 +23,12 @@ public class RespuestaController {
 
     private final RespuestaService respuestaService;
     private final PreguntaService preguntaService;
+    private final CuestionarioService cuestionarioService;
 
-    public RespuestaController(RespuestaService respuestaService, PreguntaService preguntaService) {
+    public RespuestaController(RespuestaService respuestaService, PreguntaService preguntaService, CuestionarioService cuestionarioService) {
         this.respuestaService = respuestaService;
         this.preguntaService = preguntaService;
+        this.cuestionarioService = cuestionarioService;
     }
 
     @PreAuthorize("hasRole('admin')")
@@ -44,6 +47,16 @@ public class RespuestaController {
 
         if (!esPropietario) {
             redirectAttributes.addFlashAttribute("error", "No tienes permisos para ver las respuestas de este cuestionario.");
+            return "redirect:/cuestionarios";
+        }
+
+        // Verificar si el cuestionario se puede editar (para acceder a la vista de respuestas)
+        if (!cuestionarioService.sePuedeEditar(cuestionario)) {
+            if (cuestionarioService.estaActivo(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se puede acceder a las respuestas mientras el cuestionario está activo.");
+            } else if (cuestionarioService.haFinalizado(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se puede acceder a las respuestas después de que el cuestionario ha finalizado.");
+            }
             return "redirect:/cuestionarios";
         }
 
@@ -67,6 +80,17 @@ public class RespuestaController {
             redirectAttributes.addFlashAttribute("error", "No tienes permisos para eliminar las respuestas de este cuestionario.");
             return "redirect:/cuestionarios";
         }
+
+        // Verificar si el cuestionario se puede editar
+        if (!cuestionarioService.sePuedeEditar(cuestionario)) {
+            if (cuestionarioService.estaActivo(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se pueden eliminar las respuestas mientras el cuestionario está activo.");
+            } else if (cuestionarioService.haFinalizado(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se pueden eliminar las respuestas después de que el cuestionario ha finalizado.");
+            }
+            return "redirect:/preguntas/editar/" + pregunta.getId();
+        }
+
         respuestaService.deleteRespuesta(id);
         return "redirect:/preguntas/editar/"+pregunta.getId();
     }

@@ -67,6 +67,7 @@
                   <th><i class="fas fa-calendar"></i> Fecha</th>
                   <th><i class="fas fa-clock"></i> Horario</th>
                   <th><i class="fas fa-hourglass-half"></i> Duración</th>
+                  <th><i class="fas fa-info-circle"></i> Estado</th>
                   <th><i class="fas fa-cogs"></i> Acciones</th>
                 </tr>
               </thead>
@@ -90,18 +91,32 @@
                   <td class="duracion-cell">
                     <span class="duracion-badge" th:text="${cuestionario.duracion} + ' min'">90 min</span>
                   </td>
+                  <td class="estado-cell">
+                    <div th:if="${cuestionarioService.estaActivo(cuestionario)}" class="estado-badge estado-activo">
+                      <i class="fas fa-clock"></i>
+                      Activo
+                    </div>
+                    <div th:if="${cuestionarioService.haFinalizado(cuestionario)}" class="estado-badge estado-finalizado">
+                      <i class="fas fa-check-circle"></i>
+                      Finalizado
+                    </div>
+                    <div th:if="${!cuestionarioService.haComenzado(cuestionario)}" class="estado-badge estado-pendiente">
+                      <i class="fas fa-calendar-plus"></i>
+                      Pendiente
+                    </div>
+                  </td>
                   <td class="acciones-cell">
                     <div class="acciones-group">
-                      <a th:href="@{/cuestionarios/editar/{id}(id=${cuestionario.id})}" class="action-btn btn-editar" title="Editar cuestionario">
+                      <a th:if="${cuestionarioService.sePuedeEditar(cuestionario)}" th:href="@{/cuestionarios/editar/{id}(id=${cuestionario.id})}" class="action-btn btn-editar" title="Editar cuestionario">
                         <i class="fas fa-edit"></i>
                       </a>
-                      <a th:href="@{/preguntas/{id}(id=${cuestionario.id})}" class="action-btn btn-preguntas" title="Ver preguntas">
+                      <a th:if="${cuestionarioService.sePuedeEditar(cuestionario)}" th:href="@{/preguntas/{id}(id=${cuestionario.id})}" class="action-btn btn-preguntas" title="Ver preguntas">
                         <i class="fas fa-list"></i>
                       </a>
                       <a th:href="@{/intentos/cuestionario/{id}(id=${cuestionario.id})}" class="action-btn btn-intentos" title="Ver intentos">
                         <i class="fas fa-chart-line"></i>
                       </a>
-                      <button type="button" th:data-id="${cuestionario.id}" class="action-btn btn-eliminar eliminar-cuestionario" title="Eliminar cuestionario">
+                      <button th:if="${cuestionarioService.sePuedeEditar(cuestionario)}" type="button" th:data-id="${cuestionario.id}" class="action-btn btn-eliminar eliminar-cuestionario" title="Eliminar cuestionario">
                         <i class="fas fa-trash"></i>
                       </button>
                     </div>

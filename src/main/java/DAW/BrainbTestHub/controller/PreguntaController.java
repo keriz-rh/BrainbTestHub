@@ -49,6 +49,16 @@ public class PreguntaController {
             return "redirect:/cuestionarios";
         }
 
+        // Verificar si el cuestionario se puede editar
+        if (!cuestionarioService.sePuedeEditar(cuestionario)) {
+            if (cuestionarioService.estaActivo(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se pueden editar las preguntas mientras el cuestionario está activo.");
+            } else if (cuestionarioService.haFinalizado(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se pueden editar las preguntas después de que el cuestionario ha finalizado.");
+            }
+            return "redirect:/preguntas/" + cuestionarioId;
+        }
+
         model.addAttribute("cuestionario", cuestionario);
         model.addAttribute("pregunta", new Pregunta());
         model.addAttribute("respuestas", List.of(new Respuesta(), new Respuesta(), new Respuesta(), new Respuesta())); // 4
@@ -62,10 +72,20 @@ public class PreguntaController {
     @PreAuthorize("hasRole('admin')")
     @PostMapping("/guardar")
     public String guardarPregunta(@ModelAttribute Pregunta pregunta, @RequestParam Long cuestionarioId,
-            @RequestParam List<String> textos, @RequestParam int correctaIndex) {
+            @RequestParam List<String> textos, @RequestParam int correctaIndex, RedirectAttributes redirectAttributes) {
         Cuestionario cuestionario = cuestionarioService.getCuestionarioById(cuestionarioId);
         if (cuestionario == null) {
             return "redirect:/cuestionarios";
+        }
+
+        // Verificar si el cuestionario se puede editar
+        if (!cuestionarioService.sePuedeEditar(cuestionario)) {
+            if (cuestionarioService.estaActivo(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se pueden guardar las preguntas mientras el cuestionario está activo.");
+            } else if (cuestionarioService.haFinalizado(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se pueden guardar las preguntas después de que el cuestionario ha finalizado.");
+            }
+            return "redirect:/preguntas/" + cuestionarioId;
         }
 
         pregunta.setCuestionario(cuestionario);
@@ -99,9 +119,20 @@ public class PreguntaController {
             return "redirect:/cuestionarios";
         }
 
+        // Verificar si el cuestionario se puede editar (para acceder a la vista de preguntas)
+        if (!cuestionarioService.sePuedeEditar(cuestionario)) {
+            if (cuestionarioService.estaActivo(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se puede acceder a las preguntas mientras el cuestionario está activo.");
+            } else if (cuestionarioService.haFinalizado(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se puede acceder a las preguntas después de que el cuestionario ha finalizado.");
+            }
+            return "redirect:/cuestionarios";
+        }
+
         List<Pregunta> preguntas = preguntaService.obtenerPreguntasPorCuestionario(cuestionarioId);
         model.addAttribute("cuestionario", cuestionario);
         model.addAttribute("preguntas", preguntas);
+        model.addAttribute("cuestionarioService", cuestionarioService);
         model.addAttribute("titulo", "Preguntas del Cuestionario: " + cuestionario.getTitulo());
         return "preguntas/lista";
     }
@@ -125,6 +156,16 @@ public class PreguntaController {
             return "redirect:/cuestionarios";
         }
 
+        // Verificar si el cuestionario se puede editar
+        if (!cuestionarioService.sePuedeEditar(cuestionario)) {
+            if (cuestionarioService.estaActivo(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se pueden editar las preguntas mientras el cuestionario está activo.");
+            } else if (cuestionarioService.haFinalizado(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se pueden editar las preguntas después de que el cuestionario ha finalizado.");
+            }
+            return "redirect:/preguntas/" + cuestionario.getId();
+        }
+
         List<Respuesta> respuestas = respuestaService.obtenerRespuestasPorPregunta(id);
 
         model.addAttribute("pregunta", pregunta);
@@ -145,6 +186,17 @@ public class PreguntaController {
             redirectAttributes.addFlashAttribute("error", "No tienes permisos para eliminar las preguntas de este cuestionario.");
             return "redirect:/cuestionarios";
         }
+
+        // Verificar si el cuestionario se puede editar
+        if (!cuestionarioService.sePuedeEditar(cuestionario)) {
+            if (cuestionarioService.estaActivo(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se pueden eliminar las preguntas mientras el cuestionario está activo.");
+            } else if (cuestionarioService.haFinalizado(cuestionario)) {
+                redirectAttributes.addFlashAttribute("error", "No se pueden eliminar las preguntas después de que el cuestionario ha finalizado.");
+            }
+            return "redirect:/preguntas/" + cuestionario.getId();
+        }
+
         preguntaService.deletePregunta(id);
         return "redirect:/preguntas/"+cuestionario.getId();
     }

@@ -493,4 +493,59 @@ body {
     .pregunta-id {
         align-self: flex-end;
     }
+}
+
+/* Estilos para indicadores de estado del cuestionario */
+.estado-cuestionario {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    background: #f8f9fa;
+    border-left: 4px solid #6c757d;
+}
+
+.estado-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.estado-badge.estado-activo {
+    color: #856404;
+    background: #fff3cd;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #ffeaa7;
+}
+
+.estado-badge.estado-activo i {
+    color: #f39c12;
+}
+
+.estado-badge.estado-finalizado {
+    color: #721c24;
+    background: #f8d7da;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #f5c6cb;
+}
+
+.estado-badge.estado-finalizado i {
+    color: #e74c3c;
+}
+
+/* Ajustes para botones deshabilitados */
+.btn-primary:disabled,
+.btn-secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Estilos para acciones deshabilitadas */
+.action-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
 } 
