@@ -51,7 +51,7 @@
 
         <div class="input-box">
           <span class="details">Duración (min)</span>
-          <input type="number" class="form-control" th:field="*{duracion}" required />
+          <input type="number" min="1" class="form-control" th:field="*{duracion}" required/>
         </div>
 
         <input type="hidden" th:field="*{id}" />
