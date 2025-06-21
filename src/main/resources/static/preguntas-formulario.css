@@ -10,15 +10,6 @@
     overflow: hidden;
 }
 
-.pregunta-form-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: linear-gradient(90deg, #481e8a, #6a3093, #a044ff);
-}
 
 
 .form-header {

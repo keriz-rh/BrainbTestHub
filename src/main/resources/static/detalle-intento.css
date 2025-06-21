@@ -98,16 +98,6 @@ body::after {
     margin-bottom: 2rem;
 }
 
-.detalle-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #6f42c1, #8b5cf6);
-    border-radius: 12px 12px 0 0;
-}
 
 /* Header */
 .detalle-header {
